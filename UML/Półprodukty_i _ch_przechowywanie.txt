@@ -1,0 +1,58 @@
+@startuml
+class Package {
+    - {static} freed_IDs : set<ElementID>
+    - {static} assigned_IDs : set<ElementID>
+    - id_ : ElementID
+    __
+    + Package()
+    + Package(ElementID)
+    + Package(Package&&)
+    + operator=(Package&&) : Package&
+    + get_id(): ElementID {query}
+    + ~Package()
+}
+
+interface IPackageStockpile <<interface>> {
+    __
+    + push(Package&&) : void
+    + empty() : bool {query}
+    + size() : size_type {query}
+    + begin() : const_iterator
+    + end() : const_iterator
+    + cbegin() : const_iterator
+    + cend() : const_iterator
+    + {abstract} ~IPackageStockpile()
+}
+
+interface IPackageQueue <<interface>> {
+    __
+    + {abstract} pop() : Package
+    + {abstract} get_queue_type() : PackageQueueType {query}
+}
+
+enum PackageQueueType <<enumeration>> {
+    FIFO
+    LIFO
+}
+
+class PackageQueue {
+    - queue_type_ : PackageQueueType
+    - _list : std::list<Package>
+    __
+    + PackageQueue(PackageQueueType)
+    + pop() : Package
+    + get_queue_type() : PackageQueueType {query}
+    + push(Package&&) : void
+    + size() : size_type {query}
+    + empty() : bool {query}
+    ' oraz implementacja iteratorów
+}
+
+class ElementID << (T,orchid) primitive>>
+
+' Relacje
+IPackageQueue -up-|> IPackageStockpile : <<extends>>
+PackageQueue .up.|> IPackageQueue : <<implements>>
+PackageQueue *-- Package : zawiera (agregacja/kompozycja)
+PackageQueue ..> PackageQueueType : używa
+@enduml
