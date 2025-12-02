@@ -1,0 +1,22 @@
+składnia operatora przenoszącego 
+
+&& - rvalue reference
+----------------------
+
+ClassName& ClassName::operator=(ClassName&& other) noexcept {
+    if (this != &other) {
+        
+        // 1. Zwolnij swoje zasoby
+        cleanup();
+        
+        // 2. Przenieś zasoby
+        this->data_ = other.data_;
+        
+        // 3. Wyzeruj obiekt źródłowy
+        other.data_ = nullptr;
+    }
+
+    return *this; // 4. zwróć siebie
+}
+
+------------------------------------------------
