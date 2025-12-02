@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.10) 
+
+project(Netsim)  
+
+set(CMAKE_CXX_STANDARD 17)  # Standard C++17
+
+# Ścieżka do katalogów z nagłówkami
+include_directories(include)
+
+Lista plików źródłowych
+set(SOURCES
+    src/simulation.cpp  # Główny plik programu
+    src/factory.cpp
+    src/helpers.cpp
+    src/nodes.cpp
+    src/package.cpp
+    src/reports.cpp
+    src/storage_types.cpp
+)
+
+# Tworzenie pliku wykonywalnego
+add_executable(netsim ${SOURCES})
+
+# Opcjonalnie, jeśli chcesz zainstalować projekt
+# install(TARGETS netsim DESTINATION bin)
