@@ -1,25 +1,26 @@
-#pragma once 
+#pragma once
 
 #include "types.hpp"
 #include <set>
 
 class Package {
-    public:
-        Package();
+public:
+    Package();                       // nowe ID
+    Package(ElementId id);           // używa stare ID
+    Package(Package&& other) noexcept;
 
-        Package(ElementId id) : id_(id) {assigned_ids_.insert(id);}
+    Package& operator=(Package&& other) noexcept;
 
-        Package(Package&& other) : id_(other.id_) {}
+    ElementId getID() const { return id_; }
 
-        ElementId getID() const { return id_; }
+    ~Package();
 
-        Package& operator=(Package&& other) noexcept; //nadpisanie move
+private:
+    ElementId id_;
 
-        ~Package();
+    // pola dzielone przez wszystkie obikety danej klasy
+    static std::set<ElementId> freed_ids_;  
+    static std::set<ElementId> assigned_ids_;
 
-        
-    private:
-        ElementId id_;
-        std::set<ElementId> freed_ids_;
-        std::set<ElementId> assigned_ids_;
+    static ElementId generate_id();
 };
