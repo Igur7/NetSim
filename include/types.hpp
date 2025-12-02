@@ -1,3 +1,8 @@
 #pragma once 
 
-using id = int; 
+using ElementId = int;
+
+enum class QueueType {
+    Fifo,Lifo
+};
+
