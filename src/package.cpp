@@ -10,11 +10,9 @@ ElementId Package::generate_id() {
         assigned_ids_.insert(id);
         return id;
     }
-    else {
-            ElementId new_id = assigned_ids_.empty() ? 1 : (*assigned_ids_.rbegin()) + 1;
+    ElementId new_id = assigned_ids_.empty() ? 1 : (*assigned_ids_.rbegin()) + 1;
     assigned_ids_.insert(new_id);
     return new_id;
-    }
 }
 
 Package::Package() : id_(generate_id()) {}
