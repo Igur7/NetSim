@@ -23,7 +23,7 @@ Package::Package(ElementId id) : id_(id) {
 
 // jak a = std::move(b)  to to niżej to nadpisane tej operacji zeby move działał efektywniej cnie
 Package::Package(Package&& other) noexcept: id_(other.id_) {
-    other.id_ = 0; // wyjeabne na ID juz nie ma znaczenia
+    other.id_ = 0; // na ID juz nie ma znaczenia
 }
 
 Package& Package::operator=(Package&& other) noexcept {
