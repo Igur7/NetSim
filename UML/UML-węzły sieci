@@ -1,0 +1,58 @@
+@startuml
+
+skinparam packageStyle rectangle
+
+package "Nodes" {
+
+class Ramp {
+    + Ramp(id: ElementID, di: TimeOffset) : void
+    + deliver_goods(t: Time) : void
+    + get_delivery_interval(void) : TimeOffset {query}
+    + get_id(void) : ElementID {query}
+}
+
+class Worker {
+    + Worker(id: ElementID, pd: TimeOffset, q: std::unique_ptr<IPackageQueue>) : void
+    + do_work(t: Time) : void
+    + get_processing_duration(void) : TimeOffset {query}
+    + get_package_processing_start_time(void) : Time {query}
+}
+
+class PackageSender {
+    - receiver_preferences_: ReceiverPreferences
+    + PackageSender(PackageSender&&)
+    + send_package(void) : void
+    + get_sending_buffer(void) : std::optional<Package>& {query}
+    + push_package(Package&&) : void
+}
+
+class ReceiverPreferences {
+    - preferences_t
+    + ReceiverPreferences(pg: ProbabilityGenerator)
+    + add_receiver(r: IPackageReceiver*) : void
+    + remove_receiver(r: IPackageReceiver*) : void
+    + choose_receiver(void) : IPackageReceiver*
+    + get_preferences(void) : preferences_t& {query}
+}
+
+interface IPackageReceiver {
+    + receive_package(p: Package&&) : void
+    + get_id(void) : ElementID {query}
+}
+
+}
+
+package "Storage" {
+
+interface IPackageQueue
+interface IPackageStockpile
+
+class Storehouse {
+    + Storehouse(id: ElementID, d: std::unique_ptr<IPackageStockpile>)
+}
+
+}
+
+
+
+@enduml
