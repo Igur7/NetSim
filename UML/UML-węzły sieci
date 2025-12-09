@@ -35,6 +35,10 @@ class ReceiverPreferences {
     + get_preferences(void) : preferences_t& {query}
 }
 
+class Storehouse {
+    + Storehouse(id: ElementID, d: std::unique_ptr<IPackageStockpile>)
+}
+
 interface IPackageReceiver {
     + receive_package(p: Package&&) : void
     + get_id(void) : ElementID {query}
@@ -44,14 +48,39 @@ interface IPackageReceiver {
 
 package "Storage" {
 
-interface IPackageQueue
-interface IPackageStockpile
-
-class Storehouse {
-    + Storehouse(id: ElementID, d: std::unique_ptr<IPackageStockpile>)
-}
+interface IPackageQueue{
+__
+    + {abstract} pop() : Package
+    + {abstract} get_queue_type() : PackageQueueType {query}
 
 }
+interface IPackageStockpile{
+__
+    + push(Package&&) : void
+    + empty() : bool {query}
+    + size() : size_type {query}
+    + begin() : const_iterator
+    + end() : const_iterator
+    + cbegin() : const_iterator
+    + cend() : const_iterator
+    + {abstract} ~IPackageStockpile()
+    }
+}
+class ElementID << (T,orchid) primitive>>
+class Time << (T,orchid) primitive>>
+class TimeOffset << (T,orchid) primitive>>
+class ProbabillityGenerator << (T,orchid) primitive>>
+
+
+' Relationships
+Ramp--|>PackageSender
+Worker--|>PackageSender
+PackageSender o-- ReceiverPreferences
+Worker--|>IPackageReceiver
+Storehouse--|>IPackageReceiver
+Worker *-- IPackageQueue
+Storehouse *-- IPackageStockpile
+
 
 
 
