@@ -4,6 +4,7 @@
 #include <map>
 #include "helpers.hpp"
 #include <memory>
+#include <optional> // for std::optional (C++17)
 
 class IPackageReceiver {
     public:
@@ -26,3 +27,22 @@ class ReceiverPreferences {
         ProbabilityGenerator probability_generator_;
 };
 
+class PackageSender {
+    public:
+        PackageSender() = default;
+        PackageSender(PackageSender&&) = default;
+        void send_package();
+        const std::optional<Package>& get_sending_buffer() const { return sending_buffer_; }
+        void push_package(Package&& package) { sending_buffer_ = std::move(package); }
+
+    protected:
+        ReceiverPreferences receiver_preferences_;
+        std::optional<Package> sending_buffer_ = std::nullopt;
+};
+
+class Worker : public IPackageReceiver, public PackageSender {
+    public:
+        
+    private:
+
+};

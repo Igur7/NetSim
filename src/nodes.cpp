@@ -43,3 +43,15 @@ std::shared_ptr<IPackageReceiver> ReceiverPreferences::choose_receiver() {
     }
     return nullptr;
 }
+
+void PackageSender::send_package() {
+    if (!sending_buffer_.has_value()) {
+        return; // Brak paczki do wysłania
+    }
+
+    auto receiver = receiver_preferences_.choose_receiver();
+    if (receiver) {
+        receiver->receive_package(std::move(sending_buffer_.value()));
+        sending_buffer_.reset(); // Wyczyść bufor po wysłaniu paczki
+    }
+}
