@@ -5,6 +5,7 @@
 #include "helpers.hpp"
 #include <memory>
 #include <optional> // for std::optional (C++17)
+#include "storage_types.hpp"
 
 class IPackageReceiver {
     public:
@@ -42,7 +43,7 @@ class PackageSender {
 
 class Worker : public IPackageReceiver, public PackageSender {
     public:
-        
+
     private:
 
 };
