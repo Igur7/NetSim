@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)  # Standard C++17
 include_directories(include)
 
 #Lista plików źródłowych
-set(SOURCES
+set(SOURCE_FILES
         main.cpp
         src/simulation.cpp
         src/factory.cpp
@@ -21,7 +21,23 @@ set(SOURCES
 
 
 # Tworzenie pliku wykonywalnego
-add_executable(main ${SOURCES})
+add_executable(main main.cpp ${SOURCE_FILES})
 
 # Opcjonalnie, jeśli chcesz zainstalować projekt
 # install(TARGETS netsim DESTINATION bin)
+
+set(SOURCE_FILES_TESTS
+        test/test_storage.cpp
+)
+
+add_executable(Netsim_test ${SOURCE_FILES} ${SOURCE_FILES_TESTS} test/main_gtest.cpp)
+
+target_include_directories(Netsim_test PUBLIC
+        googletest-1.16.0/googlemock/include
+        googletest-1.16.0/googletest/include
+)
+
+
+add_subdirectory(googletest-1.16.0 googletest-master)
+
+target_link_libraries(Netsim_test gmock)
