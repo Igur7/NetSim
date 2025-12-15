@@ -5,12 +5,15 @@
 
 class Storehouse{
     public:
-        explicit Storehouse(std::unique_ptr<IPackageStockpile> stockpile = std::make_unique<PackageQueue>());
+        explicit Storehouse(
+            std::unique_ptr<IPackageStockpile> stockpile =
+             std::make_unique<PackageQueue>()
+            );
         void ReceivePackage(Package&& package);
         Package ReleasePackage();
-        bool Empty() const;
+        bool empty() const;
 
     private:
     std::unique_ptr<IPackageStockpile> stockpile_;
 
-}
+};
