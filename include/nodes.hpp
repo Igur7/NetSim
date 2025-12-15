@@ -6,14 +6,14 @@
 class Storehouse{
     public:
         explicit Storehouse(
-            std::unique_ptr<IPackageStockpile> stockpile =
-             std::make_unique<PackageQueue>()
-            );
+        std::unique_ptr<IPackageQueue> queue =
+            std::make_unique<PackageQueue>(PackageQueueType::Fifo)
+        );
+
         void ReceivePackage(Package&& package);
         Package ReleasePackage();
-        bool empty() const;
 
     private:
-    std::unique_ptr<IPackageStockpile> stockpile_;
+    std::unique_ptr<IPackageQueue> queue_;
 
 };
