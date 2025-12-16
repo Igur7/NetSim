@@ -10,8 +10,8 @@ class Storehouse{
             std::make_unique<PackageQueue>(PackageQueueType::Fifo)
         );
 
-        void ReceivePackage(Package&& package);
-        Package ReleasePackage();
+        void receivePackage(Package&& package);
+        Package releasePackage();
 
     private:
     std::unique_ptr<IPackageQueue> queue_;
