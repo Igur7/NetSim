@@ -7,6 +7,19 @@
 #include <optional> // for std::optional (C++17)
 #include "storage_types.hpp"
 
+class Storehouse{
+    public:
+        explicit Storehouse(
+        std::unique_ptr<IPackageQueue> queue =
+            std::make_unique<PackageQueue>(PackageQueueType::Fifo)
+        );
+
+        void receivePackage(Package&& package);
+        Package releasePackage();
+
+    private:
+    std::unique_ptr<IPackageQueue> queue_;
+
 class IPackageReceiver {
     public:
         virtual void receive_package(Package&& package) = 0;
