@@ -10,9 +10,11 @@ Konwencje projektowe:
 - osobny branch na każdy feature
 - do pull requesta ma być wypełniona templatka z informacjami
 - main jest protected
+- od dzisiaj każdy pisze testy jednostkowe dla swoich funkcji/klas
 
 Templatka do pull requesta:
 - co zostało dodane/zmienione
 - czy jest zgodne z aktualnym mainem (ewentualny rebase)
 - czy się kompiluje
 - czy działa jak natura chciała
+
