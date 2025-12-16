@@ -1,0 +1,64 @@
+@startuml
+hide empty members
+
+' Definicja szablonu klasy NodeCollection
+class NodeCollection<Node> << (T,olive) >> {
+    + add(node: Node&&) : void
+    + remove_by_id(id: ElementID) : void
+    + find_by_id(id: ElementID) : NodeCollection<Node>::iterator
+    + find_by_id(id: ElementID) : NodeCollection<Node>::const_iterator {query}
+    + begin() : NodeCollection<Node>::iterator
+    + end() : NodeCollection<Node>::iterator
+    + cbegin() : NodeCollection<Node>::const_iterator
+    + cend() : NodeCollection<Node>::const_iterator
+}
+
+' Konkretyzacje szablonu (Binding)
+' Tworzymy konkretne typy kolekcji dla Ramp, Robotników i Magazynów
+class Ramps
+class Workers
+class Storehouses
+
+NodeCollection <|-- Ramps : <<bind>> <Node -> Ramp>
+NodeCollection <|-- Workers : <<bind>> <Node -> Worker>
+NodeCollection <|-- Storehouses : <<bind>> <Node -> Storehouse>
+
+' Główna klasa Factory
+class Factory {
+    ' --- RAMPS ---
+    + add_ramp(Ramp&&) : void
+    + remove_ramp(id: ElementID) : void
+    + find_ramp_by_id(id: ElementID) : NodeCollection<Ramp>::iterator
+    + find_ramp_by_id(id: ElementID) : NodeCollection<Ramp>::const_iterator {query}
+    + ramp_cbegin() : NodeCollection<Ramp>::const_iterator {query}
+    + ramp_cend() : NodeCollection<Ramp>::const_iterator {query}
+
+    ' --- WORKERS (Uzupełnione) ---
+    + add_worker(Worker&&) : void
+    + remove_worker(id: ElementID) : void
+    + find_worker_by_id(id: ElementID) : NodeCollection<Worker>::iterator
+    + find_worker_by_id(id: ElementID) : NodeCollection<Worker>::const_iterator {query}
+    + worker_cbegin() : NodeCollection<Worker>::const_iterator {query}
+    + worker_cend() : NodeCollection<Worker>::const_iterator {query}
+
+    ' --- STOREHOUSES (Uzupełnione) ---
+    + add_storehouse(Storehouse&&) : void
+    + remove_storehouse(id: ElementID) : void
+    + find_storehouse_by_id(id: ElementID) : NodeCollection<Storehouse>::iterator
+    + find_storehouse_by_id(id: ElementID) : NodeCollection<Storehouse>::const_iterator {query}
+    + storehouse_cbegin() : NodeCollection<Storehouse>::const_iterator {query}
+    + storehouse_cend() : NodeCollection<Storehouse>::const_iterator {query}
+
+    ' --- LOGIKA BIZNESOWA I POMOCNICZE ---
+    - remove_receiver(collection: NodeCollection<Node>&, id: ElementID) : void
+    + is_consistent(void) : bool {query}
+    + do_deliveries(Time) : void
+    + do_package_passing(void) : void
+    + do_work(Time) : void
+}
+
+' Relacje kompozycji (Factory posiada kolekcje)
+Factory *-- Ramps
+Factory *-- Workers
+Factory *-- Storehouses
+@enduml
