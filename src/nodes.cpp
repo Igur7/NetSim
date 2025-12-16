@@ -3,10 +3,10 @@
 Storehouse::Storehouse(std::unique_ptr<IPackageQueue> queue)
     : queue_(std::move(queue)) {}
 
-void Storehouse::ReceivePackage(Package&& package) {
+void Storehouse::receivePackage(Package&& package) {
     queue_->push(std::move(package));
 }
 
-Package Storehouse::ReleasePackage() {
+Package Storehouse::releasePackage() {
     return queue_->pop();
 }
