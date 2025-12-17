@@ -19,6 +19,7 @@ class Storehouse{
 
     private:
     std::unique_ptr<IPackageQueue> queue_;
+};  
 
 class IPackageReceiver {
     public:
@@ -81,6 +82,7 @@ class Worker : public IPackageReceiver, public PackageSender {
         std::unique_ptr<IPackageQueue> queue_;
         std::optional<Package> _buffer_ = std::nullopt;
 };
+
 class Ramp: public PackageSender {
 public:
     Ramp(ElementId id, TimeOffset di)
