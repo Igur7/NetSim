@@ -48,3 +48,13 @@ public:
 private:
     container_t container_;
 };
+
+class Factory {
+private:
+    NodeCollection<Worker> workers_;
+    NodeCollection<Storehouse> storehouses_;
+    NodeCollection<Ramp> ramps_;
+
+public:
+
+};
