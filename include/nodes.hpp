@@ -81,3 +81,15 @@ class Worker : public IPackageReceiver, public PackageSender {
         std::unique_ptr<IPackageQueue> queue_;
         std::optional<Package> _buffer_ = std::nullopt;
 };
+class Ramp: public PackageSender {
+public:
+    Ramp(ElementId id, TimeOffset di)
+    : PackageSender(), id_(id),di_(di){}
+    void deliver_goods(Time t);
+    TimeOffset get_delivery_interval() const;
+    ElementId get_id() const;
+
+private:
+    ElementId id_;
+    TimeOffset di_;
+};
