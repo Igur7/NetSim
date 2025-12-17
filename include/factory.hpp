@@ -15,21 +15,21 @@ public:
         container_.emplace_back(std::move(node));
     }
 
-    void remove_by_id(ElementID id) {
+    void remove_by_id(ElementId id) {
         auto it = find_by_id(id);
         if (it != container_.end()) {
             container_.erase(it);
         }
     }
 
-    iterator find_by_id(ElementID id) {
+    iterator find_by_id(ElementId id) {
         return std::find_if(container_.begin(), container_.end(),
             [id](const Node& node) {
                 return node.get_id() == id;
             });
     }
 
-    const_iterator find_by_id(ElementID id) const {
+    const_iterator find_by_id(ElementId id) const {
         return std::find_if(container_.cbegin(), container_.cend(),
             [id](const Node& node) {
                 return node.get_id() == id;
