@@ -1,7 +1,7 @@
 #include "nodes.hpp"
 
-Storehouse::Storehouse(std::unique_ptr<IPackageQueue> queue)
-    : queue_(std::move(queue)) {}
+Storehouse::Storehouse(ElementId id, std::unique_ptr<IPackageQueue> queue)
+    : queue_(std::move(queue)), id_(id) {}
 
 void Storehouse::receivePackage(Package&& package) {
     queue_->push(std::move(package));
@@ -83,3 +83,26 @@ void Worker::do_work(Time t){// w symulacji update czasu t
 void Worker::receive_package(Package&& package) {
     queue_->push(std::move(package)); //zdejmuje paczke z kolejki i umieszcza w kolejce pracownika
 }
+
+void Ramp::deliver_goods(Time t) {
+    if (!buffer_) {
+        buffer_.emplace(id_);   // tworzymy paczkę w buforze rampy, bo tam jest std::optional to jak sie tam da id_ to on odpadli konstruktori paczki i doda paczka do buffer
+        time_ = t;              // zapamiętujemy moment rozpoczęcia
+        return;
+    }
+
+    // 2. Jeśli paczka była produkowana i minął czas dostawy
+    if (t - time_ == di_) {
+        push_package(std::move(*buffer_)); // przekazujemy do wysyłki
+        buffer_.reset();                   // bufor znów pusty
+    }
+}
+
+TimeOffset Ramp::get_delivery_interval() const {
+    return di_;
+}
+
+ElementId Ramp::get_id() const {
+    return id_;
+}
+

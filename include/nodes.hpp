@@ -9,16 +9,18 @@
 
 class Storehouse{
     public:
-        explicit Storehouse(
+        explicit Storehouse(ElementId id,
         std::unique_ptr<IPackageQueue> queue =
             std::make_unique<PackageQueue>(PackageQueueType::Fifo)
         );
 
         void receivePackage(Package&& package);
         Package releasePackage();
+        ElementId get_id() const { return id_; }
 
     private:
     std::unique_ptr<IPackageQueue> queue_;
+    ElementId id_;
 };  
 
 class IPackageReceiver {
@@ -94,4 +96,6 @@ public:
 private:
     ElementId id_;
     TimeOffset di_;
+    Time time_;
+    std::optional<Package> buffer_ = std::nullopt;
 };
