@@ -42,6 +42,7 @@ bool Factory::has_reachable_storehouse(const PackageSender* sender, std::map<con
 
     }
 
+    // rampa nie podaje do innej ramppy nigdy tyl;ko do workera lub magazynu dlatego tego onei sprowadziałem ale to jest do review
     node_colors[sender] = NodeColor::VERIFIED;
     if (has_any_receiver) {
         return true;
