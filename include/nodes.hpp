@@ -28,6 +28,7 @@ class IPackageReceiver {
         virtual void receive_package(Package&& package) = 0;
         virtual ElementId get_id() const = 0;
         virtual ~IPackageReceiver() = default;
+        virtual ReceiverType get_receiver_type() const = 0;
 };
 
 class ReceiverPreferences {
@@ -45,6 +46,7 @@ class ReceiverPreferences {
 };
 
 class PackageSender {
+    friend class Factory;
     public:
         PackageSender() = default;
         PackageSender(PackageSender&&) = default;

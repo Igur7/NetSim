@@ -4,6 +4,9 @@
 #include <vector> 
 #include "nodes.hpp"
 
+enum class NodeColor { UNVISITED, VISITED, VERIFIED };
+
+
 template <typename Node>
 class NodeCollection {
 public:
@@ -54,7 +57,8 @@ private:
     NodeCollection<Worker> workers_;
     NodeCollection<Storehouse> storehouses_;
     NodeCollection<Ramp> ramps_;
+    bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors);
 
 public:
-
+    bool is_consistent() const;
 };
