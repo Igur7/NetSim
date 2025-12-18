@@ -57,7 +57,7 @@ private:
     NodeCollection<Worker> workers_;
     NodeCollection<Storehouse> storehouses_;
     NodeCollection<Ramp> ramps_;
-    bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors);
+    bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors) const;
 
 public:
     bool is_consistent() const;

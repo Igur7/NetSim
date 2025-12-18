@@ -2,7 +2,7 @@
 #include "types.hpp"
 #include <memory>
 
-bool Factory::has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors) {
+bool Factory::has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors) const {
     if (node_colors[sender] == NodeColor::VERIFIED) {
         return true;
     }
@@ -50,4 +50,25 @@ bool Factory::has_reachable_storehouse(const PackageSender* sender, std::map<con
     }
 
 
+}
+
+bool Factory::is_consistent() const {
+    std::map<const PackageSender *, NodeColor> color;
+    for (const auto& ramp : ramps_) {
+        color[&ramp] = NodeColor::UNVISITED;
+    }
+    for (const auto& worker : workers_) {
+        color[&worker] = NodeColor::UNVISITED;
+    }
+    try {
+        for (const auto& ramp : ramps_) {
+            has_reachable_storehouse(&ramp, color);
+        }
+    } 
+    catch (const std::logic_error& e) {
+
+        return false;
+    }
+
+    return true;
 }
