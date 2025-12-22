@@ -84,6 +84,10 @@ void Worker::receive_package(Package&& package) {
     queue_->push(std::move(package)); //zdejmuje paczke z kolejki i umieszcza w kolejce pracownika
 }
 
+ReceiverType Worker::get_receiver_type() const {
+    return ReceiverType::WORKER;
+}   
+
 void Ramp::deliver_goods(Time t) {
     if (!buffer_) {
         buffer_.emplace(id_);   // tworzymy paczkę w buforze rampy, bo tam jest std::optional to jak sie tam da id_ to on odpadli konstruktori paczki i doda paczka do buffer

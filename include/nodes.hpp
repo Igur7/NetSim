@@ -79,6 +79,7 @@ class Worker : public IPackageReceiver, public PackageSender {
         
         std::unique_ptr<IPackageQueue>& get_queue() { return queue_; } // zwaraca referencje do uniqueptr na kolejke
 
+        ReceiverType get_receiver_type() const override;
     private:
         ElementId id_;
         TimeOffset process_durration_; //czas przetwarzania paczki przez danego workera
