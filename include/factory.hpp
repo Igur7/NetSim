@@ -54,11 +54,36 @@ private:
 
 class Factory {
 private:
+    template<class Node>
+    void remove_receiver(NodeCollection<Node>& collection, ElementId id);
     NodeCollection<Worker> workers_;
     NodeCollection<Storehouse> storehouses_;
     NodeCollection<Ramp> ramps_;
     bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors) const;
-
 public:
     bool is_consistent() const;
+    void do_deliveries(Time t);
+    void do_package_passing();
+    void do_work(Time t);
+
+    void add_ramp(Ramp&& ramp);
+    void remove_ramp(ElementId id);
+    NodeCollection<Ramp>::iterator find_ramp_by_id(ElementId id);
+    NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementId id) const;
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const;
+    NodeCollection<Ramp>::const_iterator ramp_cend() const;
+    
+    void add_worker(Worker&& worker);
+    void remove_worker(ElementId id);
+    NodeCollection<Worker>::iterator find_worker_by_id(ElementId id);
+    NodeCollection<Worker>::const_iterator find_worker_by_id(ElementId id) const;
+    NodeCollection<Worker>::const_iterator worker_cbegin() const;
+    NodeCollection<Worker>::const_iterator worker_cend() const;
+    
+    void add_storehouse(Storehouse&& storehouse);
+    void remove_storehouse(ElementId id);
+    NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementId id);
+    NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementId id) const;
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const;
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const;
 };
