@@ -7,22 +7,6 @@
 #include <optional> // for std::optional (C++17)
 #include "storage_types.hpp"
 
-class Storehouse{
-    public:
-        explicit Storehouse(ElementId id,
-        std::unique_ptr<IPackageQueue> queue =
-            std::make_unique<PackageQueue>(PackageQueueType::Fifo)
-        );
-
-        void receivePackage(Package&& package);
-        Package releasePackage();
-        ElementId get_id() const { return id_; }
-
-    private:
-    std::unique_ptr<IPackageQueue> queue_;
-    ElementId id_;
-};  
-
 class IPackageReceiver {
     public:
         virtual void receive_package(Package&& package) = 0;
@@ -30,6 +14,24 @@ class IPackageReceiver {
         virtual ~IPackageReceiver() = default;
         virtual ReceiverType get_receiver_type() const = 0;
 };
+
+class Storehouse: public IPackageReceiver {
+    public:
+        explicit Storehouse(ElementId id,
+        std::unique_ptr<IPackageQueue> queue =
+            std::make_unique<PackageQueue>(PackageQueueType::Fifo)
+        );
+
+        void receive_package(Package&& package) override;
+        Package releasePackage();
+        ElementId get_id() const override { return id_; }
+        ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
+
+    private:
+    std::unique_ptr<IPackageQueue> queue_;
+    ElementId id_;
+};  
+
 
 class ReceiverPreferences {
     public:

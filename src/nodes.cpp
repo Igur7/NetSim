@@ -3,7 +3,7 @@
 Storehouse::Storehouse(ElementId id, std::unique_ptr<IPackageQueue> queue)
     : queue_(std::move(queue)), id_(id) {}
 
-void Storehouse::receivePackage(Package&& package) {
+void Storehouse::receive_package(Package&& package) {
     queue_->push(std::move(package));
 }
 
