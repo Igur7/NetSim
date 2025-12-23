@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 # Ścieżka do nagłówków
 include_directories(include)
 
-# 1. PLIKI ŹRÓDŁOWE LOGIKI (bez main.cpp!)
-# To są pliki współdzielone przez aplikację i testy
 set(CORE_SOURCES
         src/simulation.cpp
         src/factory.cpp
@@ -20,39 +18,30 @@ set(CORE_SOURCES
 )
 
 # 2. GŁÓWNA APLIKACJA
-# Tutaj łączymy main.cpp z logiką
 add_executable(main main.cpp ${CORE_SOURCES})
 
-
-# 3. KONFIGURACJA GOOGLE TEST
 add_subdirectory(googletest-1.16.0 googletest-master)
 
 
-# 4. PLIKI TESTOWE
-# Tutaj musisz wymienić WSZYSTKIE pliki z folderu test/
+
 set(TEST_SOURCES
         test/test_storage.cpp
         test/test_factory.cpp  
 )
 
-# 5. APLIKACJA TESTOWA
-# Łączymy: main testowy + pliki testów + logikę biznesową (CORE_SOURCES)
-# WAŻNE: Nie ma tu 'main.cpp'!
+
 add_executable(Netsim_test 
         test/main_gtest.cpp 
         ${TEST_SOURCES} 
         ${CORE_SOURCES}
 )
 
-# Include dla Google Test
 target_include_directories(Netsim_test PUBLIC
         googletest-1.16.0/googlemock/include
         googletest-1.16.0/googletest/include
 )
 
-# Linkowanie bibliotek (gtest i gmock)
 target_link_libraries(Netsim_test gtest gmock)
 
-# 6. OBSŁUGA CTEST (żeby działało klikanie w "Play" w CMake Tools)
 enable_testing()
 add_test(NAME AllTests COMMAND Netsim_test)

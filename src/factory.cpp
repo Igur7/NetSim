@@ -2,72 +2,78 @@
 #include "types.hpp"
 #include <memory>
 
-bool Factory::has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors) const {
+bool Factory::has_reachable_storehouse(
+    const PackageSender* sender,
+    std::map<const PackageSender*, NodeColor>& node_colors) const
+{
+    // Jeśli już zweryfikowany – wiemy, że OK
     if (node_colors[sender] == NodeColor::VERIFIED) {
         return true;
     }
 
+    // Jeśli wracamy do VISITED → cykl bez magazynu
+    if (node_colors[sender] == NodeColor::VISITED) {
+        return false;
+    }
+
     node_colors[sender] = NodeColor::VISITED;
 
-    const ReceiverPreferences::preferences_t& preferences = sender->receiver_preferences_.get_preferences();
-    
-    if(preferences.empty()) {
-        throw std::logic_error("Sender has no receivers.");
+    const auto& preferences = sender->receiver_preferences_.get_preferences();
+    if (preferences.empty()) {
+        throw std::logic_error("Sender has no receivers");
     }
 
-    bool has_any_receiver = false;
+    bool reachable_storehouse = false;
 
-    for (const ReceiverPreferences::preferences_t::value_type& pair : preferences) {
+    for (const auto& [receiver, _] : preferences) {
 
-        std::shared_ptr<IPackageReceiver> receiver = pair.first;
         if (receiver->get_receiver_type() == ReceiverType::STOREHOUSE) {
-            has_any_receiver = true;
+            reachable_storehouse = true;
         }
-
         else if (receiver->get_receiver_type() == ReceiverType::WORKER) {
-            IPackageReceiver* receiver_ptr = receiver.get();
-            auto worker_ptr = dynamic_cast<Worker *>(receiver_ptr);
-            auto sendercv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
-            
-            if (worker_ptr == sendercv_ptr){
-                continue; // unikanie cyklu
-            }
 
-            has_any_receiver = true;
+            auto worker_ptr = dynamic_cast<Worker*>(receiver.get());
+            auto sender_ptr = static_cast<PackageSender*>(worker_ptr);
 
-            if (node_colors[sendercv_ptr] == NodeColor::UNVISITED) {
-                has_reachable_storehouse(sendercv_ptr, node_colors);
+            // pomijamy połączenie do samego siebie
+            if (sender_ptr == sender)
+                continue;
+
+            // DFS tylko jeśli nie był jeszcze odwiedzony
+            if (node_colors[sender_ptr] == NodeColor::UNVISITED) {
+                if (has_reachable_storehouse(sender_ptr, node_colors)) {
+                    reachable_storehouse = true;
+                }
             }
         }
-
     }
 
-    // rampa nie podaje do innej ramppy nigdy tyl;ko do workera lub magazynu dlatego tego onei sprowadziałem ale to jest do review
     node_colors[sender] = NodeColor::VERIFIED;
-    if (has_any_receiver) {
-        return true;
-    } else {
-        throw std::logic_error("No reachable storehouse from sender.");
+
+    if (!reachable_storehouse) {
+        throw std::logic_error("No reachable storehouse from sender");
     }
 
-
+    return true;
 }
 
+
 bool Factory::is_consistent() const {
-    std::map<const PackageSender *, NodeColor> color;
+    std::map<const PackageSender*, NodeColor> colors;
+
     for (const auto& ramp : ramps_) {
-        color[&ramp] = NodeColor::UNVISITED;
+        colors[&ramp] = NodeColor::UNVISITED;
     }
     for (const auto& worker : workers_) {
-        color[&worker] = NodeColor::UNVISITED;
+        colors[&worker] = NodeColor::UNVISITED;
     }
+
     try {
         for (const auto& ramp : ramps_) {
-            has_reachable_storehouse(&ramp, color);
+            has_reachable_storehouse(&ramp, colors);
         }
-    } 
-    catch (const std::logic_error& e) {
-
+    }
+    catch (const std::logic_error&) {
         return false;
     }
 
@@ -76,7 +82,38 @@ bool Factory::is_consistent() const {
 
 template <class Node>
 void Factory::remove_receiver(NodeCollection<Node>& collection, ElementId id) {
+
+    // 1. Usuwamy połączenia z ramp
+    for (auto& ramp : ramps_) {
+        auto& prefs = ramp.receiver_preferences_.get_preferences();
+
+        for (auto it = prefs.begin(); it != prefs.end(); ) {
+            if (it->first->get_id() == id) {
+                ramp.receiver_preferences_.remove_receiver(it->first);
+                it = prefs.begin(); // mapa się zmienia ,zaczynamy od nowa
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // 2. Usuwamy połączenia z workerów
+    for (auto& worker : workers_) {
+        auto& prefs = worker.receiver_preferences_.get_preferences();
+
+        for (auto it = prefs.begin(); it != prefs.end(); ) {
+            if (it->first->get_id() == id) {
+                worker.receiver_preferences_.remove_receiver(it->first);
+                it = prefs.begin();
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // 3. Na końcu usuwamy obiekt z kolekcji
     collection.remove_by_id(id);
+    //*it  // std::pair<const std::shared_ptr<IPackageReceiver>, double>
 }
 
 void Factory::do_deliveries(Time t){
