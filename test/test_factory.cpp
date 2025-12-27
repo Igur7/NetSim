@@ -43,3 +43,38 @@ TEST(NodeCollectionTest, RemoveById) {
     ASSERT_NE(it2, collection.end()); 
     EXPECT_EQ(it2->get_id(), 2);      
 }
+
+//dodawanie elementu do fabryki
+TEST(FactoryTest, AddRampIncreasesRampCount) {
+    Factory f;
+    f.add_ramp(Ramp(1, 1));
+
+    EXPECT_EQ(std::distance(f.ramp_cbegin(), f.ramp_cend()), 1);
+}
+
+//is_consistent
+TEST(FactoryConsistencyTest, NoStorehouseIsInconsistent) {
+    Factory f;
+    f.add_ramp(Ramp(1, 1));
+
+    EXPECT_FALSE(f.is_consistent());
+}
+
+//polaczenie reciever-worker po remove_worker
+TEST(FactoryTest, RemovingWorkerMakesFactoryInconsistent) {
+    Factory f;
+
+    f.add_ramp(Ramp(1, 1));
+    f.add_worker(
+        Worker(
+            1,
+            1,
+            std::make_unique<PackageQueue>(PackageQueueType::Fifo)
+        )
+    );
+    f.add_storehouse(Storehouse(1));
+
+    f.remove_worker(1);
+
+    EXPECT_FALSE(f.is_consistent());
+}
