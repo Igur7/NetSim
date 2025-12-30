@@ -5,6 +5,8 @@
 #include "helpers.hpp"
 #include <memory>
 #include <optional> // for std::optional (C++17)
+#include <gtest/gtest_prod.h>
+
 #include "storage_types.hpp"
 
 class IPackageReceiver {
@@ -49,6 +51,14 @@ class ReceiverPreferences {
 
 class PackageSender {
     friend class Factory;
+    FRIEND_TEST(FactoryTest, IsConsistentCorrect);
+    FRIEND_TEST(FactoryTest, IsConsistentMissingLink1);
+    FRIEND_TEST(FactoryTest, IsConsistentMissingLink2);
+    FRIEND_TEST(FactoryTest, RemoveWorkerNoSuchReceiver);
+    FRIEND_TEST(FactoryTest, RemoveWorkerOnlyOneReceiver);
+    FRIEND_TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers);
+    FRIEND_TEST(FactoryTest,IsConsistent_MixedWithCycle);
+    
     public:
         PackageSender() = default;
         PackageSender(PackageSender&&) = default;
