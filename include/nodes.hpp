@@ -5,8 +5,6 @@
 #include "helpers.hpp"
 #include <memory>
 #include <optional> // for std::optional (C++17)
-#include <gtest/gtest_prod.h>
-
 #include "storage_types.hpp"
 
 class IPackageReceiver {
@@ -51,20 +49,29 @@ class ReceiverPreferences {
 
 class PackageSender {
     friend class Factory;
-    FRIEND_TEST(FactoryTest, IsConsistentCorrect);
-    FRIEND_TEST(FactoryTest, IsConsistentMissingLink1);
-    FRIEND_TEST(FactoryTest, IsConsistentMissingLink2);
-    FRIEND_TEST(FactoryTest, RemoveWorkerNoSuchReceiver);
-    FRIEND_TEST(FactoryTest, RemoveWorkerOnlyOneReceiver);
-    FRIEND_TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers);
-    FRIEND_TEST(FactoryTest,IsConsistent_MixedWithCycle);
-    
     public:
         PackageSender() = default;
+    
         PackageSender(PackageSender&&) = default;
+    
         void send_package();
+    
         const std::optional<Package>& get_sending_buffer() const { return sending_buffer_; }
+    
         void push_package(Package&& package) { sending_buffer_ = std::move(package); }
+        
+        //delegacja żeby działa enkapsulacja
+        void add_receiver(std::shared_ptr<IPackageReceiver> r) {
+            receiver_preferences_.add_receiver(r);
+        }   
+
+        void remove_receiver(std::shared_ptr<IPackageReceiver> r) {
+            receiver_preferences_.remove_receiver(r);
+        }
+
+        const auto& get_receiver_preferences() const {
+            return receiver_preferences_.get_preferences();
+        }
 
     protected:
         ReceiverPreferences receiver_preferences_;

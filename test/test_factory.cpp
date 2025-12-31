@@ -100,12 +100,12 @@ TEST(FactoryTest, IsConsistent_MixedWithCycle) {
     auto w2_ptr = make_observer_ptr<IPackageReceiver>(&w2);
     auto s_ptr  = make_observer_ptr<IPackageReceiver>(&s);
 
-    r.receiver_preferences_.add_receiver(w1_ptr);
+    r.add_receiver(w1_ptr);
 
-    w1.receiver_preferences_.add_receiver(s_ptr);
-    w1.receiver_preferences_.add_receiver(w2_ptr);
+    w1.add_receiver(s_ptr);
+    w1.add_receiver(w2_ptr);
 
-    w2.receiver_preferences_.add_receiver(w2_ptr);
+    w2.add_receiver(w2_ptr);
 
     EXPECT_FALSE(factory.is_consistent());
 }
@@ -126,13 +126,14 @@ TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
     auto w2_ptr = make_observer_ptr<IPackageReceiver>(&w2);
     auto w3_ptr = make_observer_ptr<IPackageReceiver>(&w3);
 
-    r.receiver_preferences_.add_receiver(w1_ptr);
-    r.receiver_preferences_.add_receiver(w2_ptr);
-    r.receiver_preferences_.add_receiver(w3_ptr);
+    r.add_receiver(w1_ptr);
+    r.add_receiver(w2_ptr);
+    r.add_receiver(w3_ptr);
 
     factory.remove_worker(1);
 
-    const auto& prefs = r.receiver_preferences_.get_preferences();
+    const auto& prefs = r.get_receiver_preferences();
+    
     ASSERT_EQ(prefs.size(), 2U);
 
     auto it2 = prefs.find(w2_ptr);
