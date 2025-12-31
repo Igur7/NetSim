@@ -48,7 +48,7 @@ class ReceiverPreferences {
 };
 
 class PackageSender {
-    friend class Factory;
+    //friend class Factory;
     public:
         PackageSender() = default;
     

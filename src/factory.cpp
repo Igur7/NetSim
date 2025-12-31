@@ -18,7 +18,7 @@ bool Factory::has_reachable_storehouse(
 
     node_colors[sender] = NodeColor::VISITED;
 
-    const auto& preferences = sender->receiver_preferences_.get_preferences();
+    const auto& preferences = sender->get_receiver_preferences();
     if (preferences.empty()) {
         throw std::logic_error("Sender has no receivers");
     }
@@ -85,11 +85,11 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementId id) {
 
     // 1. Usuwamy połączenia z ramp
     for (auto& ramp : ramps_) {
-        auto& prefs = ramp.receiver_preferences_.get_preferences();
+        auto& prefs = ramp.get_receiver_preferences();
 
         for (auto it = prefs.begin(); it != prefs.end(); ) {
             if (it->first->get_id() == id) {
-                ramp.receiver_preferences_.remove_receiver(it->first);
+                ramp.remove_receiver(it->first);
                 it = prefs.begin(); // mapa się zmienia ,zaczynamy od nowa
             } else {
                 ++it;
@@ -99,11 +99,11 @@ void Factory::remove_receiver(NodeCollection<Node>& collection, ElementId id) {
 
     // 2. Usuwamy połączenia z workerów
     for (auto& worker : workers_) {
-        auto& prefs = worker.receiver_preferences_.get_preferences();
+        auto& prefs = worker.get_receiver_preferences();
 
         for (auto it = prefs.begin(); it != prefs.end(); ) {
             if (it->first->get_id() == id) {
-                worker.receiver_preferences_.remove_receiver(it->first);
+                worker.remove_receiver(it->first);
                 it = prefs.begin();
             } else {
                 ++it;
