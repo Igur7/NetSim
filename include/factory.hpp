@@ -87,3 +87,7 @@ public:
     NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const;
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const;
 };
+
+Factory load_factory_structure(std::istream& is);
+
+Factory save_factory_structure(const Factory& factory, std::ostream& os);
