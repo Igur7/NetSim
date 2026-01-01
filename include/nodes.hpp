@@ -109,8 +109,7 @@ class Worker : public IPackageReceiver, public PackageSender {
 
 class Ramp: public PackageSender {
 public:
-    Ramp(ElementId id, TimeOffset di)
-    : PackageSender(), id_(id),di_(di){}
+    Ramp(ElementId id, TimeOffset di) :PackageSender(), id_(id),di_(di), time_(), buffer_(std::nullopt) {}
     void deliver_goods(Time t);
     TimeOffset get_delivery_interval() const;
     ElementId get_id() const;
@@ -119,5 +118,5 @@ private:
     ElementId id_;
     TimeOffset di_;
     Time time_;
-    std::optional<Package> buffer_ = std::nullopt;
+    std::optional<Package> buffer_;
 };

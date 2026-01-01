@@ -4,6 +4,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <istream>
 
 bool Factory::has_reachable_storehouse(
     const PackageSender* sender,
@@ -267,4 +268,44 @@ ParsedLineData IO::parse_line(const std::string& line){
     }
 
     return parsed_data;
+}
+
+Factory IO::load_factory_structure(std::istream& is){
+    Factory factory;
+    std::string line;
+    while (std::getline(is,line)){
+        if (line.empty() || line[0] == ';' || line[0] == '#') {
+            continue; 
+        }
+        ParsedLineData parsed_data = parse_line(line);
+        
+        switch(parsed_data.element_type){
+            case ElementType::RAMP:
+            {
+                ElementId id = std::stoi(parsed_data.parameters.at("id"));
+                TimeOffset di = std::stoi(parsed_data.parameters.at("delivery-interval"));
+                factory.add_ramp(Ramp(id,di));
+                break;
+            }
+            case ElementType::WORKER:
+            {
+                ElementId id = std::stoi(parsed_data.parameters.at("id"));
+                TimeOffset pt = std::stoi(parsed_data.parameters.at("processing-time"));
+                // @todo: read queue type from parameters
+                PackageQueueType queue_type = PackageQueueType::Fifo;
+                factory.add_worker(Worker(id,pt,std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+                break;
+            }
+            case ElementType::STOREHOUSE:
+            {
+                ElementId id = std::stoi(parsed_data.parameters.at("id"));
+                factory.add_storehouse(Storehouse(id));
+                break;
+            }
+            case ElementType::LINK:
+            {
+                //TODO: implement link parsing
+                break;
+            }
+    }
 }

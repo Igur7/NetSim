@@ -103,7 +103,7 @@ struct ParsedLineData{
 // IO handler for loading and saving factory structure
 class IO{
     public:
-    void load_factory_structure(std::istream& is);
+    Factory load_factory_structure(std::istream& is);
     void save_factory_structure(Factory& factory, std::ostream& os);
 
     private:
