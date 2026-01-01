@@ -1,6 +1,9 @@
 #include "factory.hpp"
 #include "types.hpp"
 #include <memory>
+#include <map>
+#include <sstream>
+#include <stdexcept>
 
 bool Factory::has_reachable_storehouse(
     const PackageSender* sender,
@@ -207,4 +210,61 @@ NodeCollection<Storehouse>::const_iterator Factory::storehouse_cbegin() const{
 
 NodeCollection<Storehouse>::const_iterator Factory::storehouse_cend() const{
     return storehouses_.cend();
+}
+
+std::vector<std::string> IO::tokenize(std::string str, char delimiter){
+    //przykąłdowe wejscie "WORKER id=1 processing-time=2"
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(str);
+
+    while (std::getline(tokenStream, token, delimiter)) {
+        if (!token.empty()){
+            tokens.push_back(token);
+        }
+    }
+
+    return tokens;
+    // wyjscie: { "WORKER", "id=1", "processing-time=2" }
+}
+
+ParsedLineData IO::parse_line(const std::string& line){
+    ParsedLineData parsed_data;
+    //rozwalnie na tokney z odzielaczem spacja
+    std::vector<std::string> tokens = tokenize(line,' ');
+
+    if (tokens.empty()){
+        throw std::runtime_error("Empty line");
+    }
+
+    std::string typeStr = tokens[0];
+    if(typeStr == "RAMP"){
+        parsed_data.element_type = ElementType::RAMP;
+    }
+    else if(typeStr == "WORKER"){
+        parsed_data.element_type = ElementType::WORKER;
+    }
+    else if(typeStr == "STOREHOUSE"){
+        parsed_data.element_type = ElementType::STOREHOUSE;
+    }
+    else if(typeStr == "LINK"){
+        parsed_data.element_type = ElementType::LINK;
+    }
+    else{
+        throw std::runtime_error("Unknown element type: " + typeStr);
+    }
+
+    for (size_t i = 1 ; i < tokens.size(); i++){
+        const std::string& token = tokens[i];
+
+        std::vector<std::string> key_value = tokenize(token,'=');
+
+        if(key_value.size() != 2){
+            throw std::runtime_error("Invalid parameter format: " + token);
+        }
+
+        parsed_data.parameters[key_value[0]] = key_value[1];
+    }
+
+    return parsed_data;
 }
