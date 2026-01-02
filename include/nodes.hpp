@@ -96,7 +96,7 @@ class Worker : public IPackageReceiver, public PackageSender {
         
         const std::optional<Package>& get_processing_buffer() const { return _buffer_; } //zwraca referencje do optionala z przetwarzanym pakietem
         
-        std::unique_ptr<IPackageQueue>& get_queue() { return queue_; } // zwaraca referencje do uniqueptr na kolejke
+        const std::unique_ptr<IPackageQueue>& get_queue() const { return queue_; } // zwaraca referencje do uniqueptr na kolejke
 
         ReceiverType get_receiver_type() const override;
     private:

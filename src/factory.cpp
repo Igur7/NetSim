@@ -279,7 +279,79 @@ PackageQueueType get_package_queue_type(std::string& packae_queue_type_string){
 }
 
 void link(Factory& factory, const std::map<std::string, std::string>& parameters){
-    //TODO: implement link 
+    std::map<std::string, NodeType> node_type_mapping {
+        {"ramp", NodeType::RAMP},
+        {"worker", NodeType::WORKER},
+        {"storehouse", NodeType::STOREHOUSE}
+    };
+
+    std::string src_str = parameters.at("src");
+    std::string dest_str = parameters.at("dest");
+
+    std::vector<std::string> src_param = IO().tokenize(src_str, '-');
+    NodeType src_node_type = node_type_mapping.at(src_param[0]);
+    ElementId src_id = std::stoi(src_param[1]);
+
+    std::vector<std::string> dest_param = IO().tokenize(dest_str, '-');
+    NodeType dest_node_type = node_type_mapping.at(dest_param[0]);
+    ElementId dest_id = std::stoi(dest_param[1]);
+
+    std::shared_ptr<IPackageReceiver> package_receiver;
+
+    // Pozwala to shared_ptr wskazywać na obiekt zarządzany przez Factory
+    // bez próby jego usunięcia (delete), gdy shared_ptr wygaśnie.
+    auto no_op_deleter = [](IPackageReceiver*){};
+
+    switch(dest_node_type){
+        case NodeType::WORKER:
+        {
+            auto worker_it = factory.find_worker_by_id(dest_id);
+            if (worker_it == factory.worker_cend()){
+                throw std::runtime_error("Worker with id " + std::to_string(dest_id) + " not found");
+            }
+            // FIX: Wskazujemy na istniejący obiekt, zamiast tworzyć kopię przez make_shared
+            package_receiver = std::shared_ptr<IPackageReceiver>(&(*worker_it), no_op_deleter);
+            break;
+        }
+        case NodeType::STOREHOUSE:
+        {
+            auto storehouse_it = factory.find_storehouse_by_id(dest_id);
+            if (storehouse_it == factory.storehouse_cend()){
+                throw std::runtime_error("Storehouse with id " + std::to_string(dest_id) + " not found");
+            }
+            package_receiver = std::shared_ptr<IPackageReceiver>(&(*storehouse_it), no_op_deleter);
+            break;
+        }
+        case NodeType::RAMP:
+        {
+            break; 
+        }
+    }
+
+    // Ustawienie połączenia źródłowego PackageSendera do docelowego IPackageReceivera
+    switch(src_node_type){
+        case NodeType::RAMP:
+        {
+            auto ramp_it = factory.find_ramp_by_id(src_id);
+            if (ramp_it == factory.ramp_cend()){
+                throw std::runtime_error("Ramp with id " + std::to_string(src_id) + " not found");
+            }
+            ramp_it->add_receiver(package_receiver);
+            break;
+        }
+        case NodeType::WORKER:{
+            auto worker_it = factory.find_worker_by_id(src_id);
+            if (worker_it == factory.worker_cend()){
+                throw std::runtime_error("Worker with id " + std::to_string(src_id) + " not found");
+            }
+            worker_it->add_receiver(package_receiver);
+            break;
+        }
+        case NodeType::STOREHOUSE:
+        {
+            break;
+        }
+    }
 }
 
 Factory IO::load_factory_structure(std::istream& is){
@@ -303,7 +375,6 @@ Factory IO::load_factory_structure(std::istream& is){
             {
                 ElementId id = std::stoi(parsed_data.parameters.at("id"));
                 TimeOffset pt = std::stoi(parsed_data.parameters.at("processing-time"));
-                // @todo: read queue type from parameters
                 PackageQueueType queue_type = get_package_queue_type(parsed_data.parameters.at("queue-type"));
                 factory.add_worker(Worker(id,pt,std::make_unique<PackageQueue>(queue_type)));
                 break;
@@ -316,10 +387,47 @@ Factory IO::load_factory_structure(std::istream& is){
             }
             case ElementType::LINK:
             {
-                //TODO: implement link parsing
+                link(factory, parsed_data.parameters);
                 break;
             }
-    }
-}
+        }
+    } 
     return factory;
+}
+
+void link_fill(std::stringstream& link_stream, const PackageSender& package_sender, ElementId package_sender_id,std::string&& package_sender_type){
+    const auto& prefs = package_sender.get_receiver_preferences();
+
+    std::for_each(prefs.begin(),prefs.end(),[&](const std::pair<std::shared_ptr<IPackageReceiver>, double>& key_value){
+        link_stream << "LINK src=" << package_sender_type <<'-' << package_sender_id << ' ' << "dest=" << (key_value.first->get_receiver_type() == ReceiverType::WORKER ? "worker" : "store") << '-' << key_value.first->get_id() << '\n';
+    });
+}
+
+void IO::save_factory_structure(Factory& factory, std::ostream& os){
+
+    std::stringstream link_stream;
+
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(),[&](const Ramp& ramp) {
+        // FIX: Zmieniono LOADING_RAMP na RAMP, aby pasowało do funkcji parse_line
+        os << "RAMP id=" << ramp.get_id() << " delivery-interval=" << ramp.get_delivery_interval() << '\n';
+        link_fill(link_stream, ramp, ramp.get_id(), "ramp");
+    });
+
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&](const Worker& worker) {
+    PackageQueueType queue_type = worker.get_queue()->getQueueType();
+    std::string queue_type_str = (queue_type == PackageQueueType::Fifo) ? "FIFO" : "LIFO";
+    
+    os << "WORKER id=" << worker.get_id() 
+       << " processing-time=" << worker.get_processing_duration() 
+       << " queue-type=" << queue_type_str << '\n';
+       
+    link_fill(link_stream, worker, worker.get_id(), "worker");
+    });
+
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(),[&](const Storehouse& storehouse) {
+        os << "STOREHOUSE id=" << storehouse.get_id() << '\n';
+    });
+
+    os << link_stream.str();
+    os.flush();
 }

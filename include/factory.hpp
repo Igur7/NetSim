@@ -105,9 +105,6 @@ class IO{
     public:
     Factory load_factory_structure(std::istream& is);
     void save_factory_structure(Factory& factory, std::ostream& os);
-
-    private:
-
     std::vector<std::string> tokenize(std::string str, char delimiter);
     ParsedLineData parse_line(const std::string& line);
     
