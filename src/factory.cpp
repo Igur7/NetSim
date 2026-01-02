@@ -270,6 +270,18 @@ ParsedLineData IO::parse_line(const std::string& line){
     return parsed_data;
 }
 
+PackageQueueType get_package_queue_type(std::string& packae_queue_type_string){
+    std::map<std::string, PackageQueueType> mapping {
+        {"FIFO", PackageQueueType::Fifo},
+        {"LIFO", PackageQueueType::Lifo}
+    };
+    return mapping.at(packae_queue_type_string);
+}
+
+void link(Factory& factory, const std::map<std::string, std::string>& parameters){
+    //TODO: implement link 
+}
+
 Factory IO::load_factory_structure(std::istream& is){
     Factory factory;
     std::string line;
@@ -292,8 +304,8 @@ Factory IO::load_factory_structure(std::istream& is){
                 ElementId id = std::stoi(parsed_data.parameters.at("id"));
                 TimeOffset pt = std::stoi(parsed_data.parameters.at("processing-time"));
                 // @todo: read queue type from parameters
-                PackageQueueType queue_type = PackageQueueType::Fifo;
-                factory.add_worker(Worker(id,pt,std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+                PackageQueueType queue_type = get_package_queue_type(parsed_data.parameters.at("queue-type"));
+                factory.add_worker(Worker(id,pt,std::make_unique<PackageQueue>(queue_type)));
                 break;
             }
             case ElementType::STOREHOUSE:
@@ -308,4 +320,6 @@ Factory IO::load_factory_structure(std::istream& is){
                 break;
             }
     }
+}
+    return factory;
 }
