@@ -239,7 +239,7 @@ ParsedLineData IO::parse_line(const std::string& line){
     }
 
     std::string typeStr = tokens[0];
-    if(typeStr == "RAMP"){
+    if(typeStr == "LOADING_RAMP"){
         parsed_data.element_type = ElementType::RAMP;
     }
     else if(typeStr == "WORKER"){
@@ -282,7 +282,7 @@ void link(Factory& factory, const std::map<std::string, std::string>& parameters
     std::map<std::string, NodeType> node_type_mapping {
         {"ramp", NodeType::RAMP},
         {"worker", NodeType::WORKER},
-        {"storehouse", NodeType::STOREHOUSE}
+        {"store", NodeType::STOREHOUSE}
     };
 
     std::string src_str = parameters.at("src");
@@ -395,39 +395,45 @@ Factory IO::load_factory_structure(std::istream& is){
     return factory;
 }
 
-void link_fill(std::stringstream& link_stream, const PackageSender& package_sender, ElementId package_sender_id,std::string&& package_sender_type){
+void link_fill(std::stringstream& link_stream, const PackageSender& package_sender, ElementId package_sender_id, std::string package_sender_type){
     const auto& prefs = package_sender.get_receiver_preferences();
 
-    std::for_each(prefs.begin(),prefs.end(),[&](const std::pair<std::shared_ptr<IPackageReceiver>, double>& key_value){
-        link_stream << "LINK src=" << package_sender_type <<'-' << package_sender_id << ' ' << "dest=" << (key_value.first->get_receiver_type() == ReceiverType::WORKER ? "worker" : "store") << '-' << key_value.first->get_id() << '\n';
+    std::for_each(prefs.begin(), prefs.end(), [&](const auto& key_value){
+        std::string dest_type = (key_value.first->get_receiver_type() == ReceiverType::WORKER ? "worker" : "store");
+        
+        link_stream << "LINK src=" << package_sender_type << '-' << package_sender_id 
+                    << " dest=" << dest_type << '-' << key_value.first->get_id() << '\n';
     });
 }
 
 void IO::save_factory_structure(Factory& factory, std::ostream& os){
-
     std::stringstream link_stream;
 
-    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(),[&](const Ramp& ramp) {
-        // FIX: Zmieniono LOADING_RAMP na RAMP, aby pasowało do funkcji parse_line
-        os << "RAMP id=" << ramp.get_id() << " delivery-interval=" << ramp.get_delivery_interval() << '\n';
+    //Zapis RAMP (LOADING_RAMP)
+    std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), [&](const Ramp& ramp) {
+        os << "LOADING_RAMP id=" << ramp.get_id() << " delivery-interval=" << ramp.get_delivery_interval() << '\n';
         link_fill(link_stream, ramp, ramp.get_id(), "ramp");
     });
 
+    //Zapis WORKER 
     std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&](const Worker& worker) {
-    PackageQueueType queue_type = worker.get_queue()->getQueueType();
-    std::string queue_type_str = (queue_type == PackageQueueType::Fifo) ? "FIFO" : "LIFO";
-    
-    os << "WORKER id=" << worker.get_id() 
-       << " processing-time=" << worker.get_processing_duration() 
-       << " queue-type=" << queue_type_str << '\n';
-       
-    link_fill(link_stream, worker, worker.get_id(), "worker");
+        PackageQueueType queue_type = worker.get_queue()->getQueueType();
+        std::string queue_type_str = (queue_type == PackageQueueType::Fifo) ? "FIFO" : "LIFO";
+        
+        os << "WORKER id=" << worker.get_id() 
+           << " processing-time=" << worker.get_processing_duration() 
+           << " queue-type=" << queue_type_str << '\n';
+           
+        link_fill(link_stream, worker, worker.get_id(), "worker");
     });
 
-    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(),[&](const Storehouse& storehouse) {
+    //Zapis STOREHOUSE
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&](const Storehouse& storehouse) {
         os << "STOREHOUSE id=" << storehouse.get_id() << '\n';
     });
 
+    //Zapis LINKÓW
     os << link_stream.str();
+
     os.flush();
 }
