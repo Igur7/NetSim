@@ -63,17 +63,19 @@ bool Factory::has_reachable_storehouse(
 
 
 bool Factory::is_consistent() const {
-    std::map<const PackageSender*, NodeColor> colors;
-
-    for (const auto& ramp : ramps_) {
-        colors[&ramp] = NodeColor::UNVISITED;
-    }
-    for (const auto& worker : workers_) {
-        colors[&worker] = NodeColor::UNVISITED;
-    }
-
     try {
         for (const auto& ramp : ramps_) {
+
+            std::map<const PackageSender*, NodeColor> colors;
+
+            // reset kolorów dla KAŻDEJ rampy
+            for (const auto& r : ramps_) {
+                colors[&r] = NodeColor::UNVISITED;
+            }
+            for (const auto& w : workers_) {
+                colors[&w] = NodeColor::UNVISITED;
+            }
+
             has_reachable_storehouse(&ramp, colors);
         }
     }
@@ -83,6 +85,7 @@ bool Factory::is_consistent() const {
 
     return true;
 }
+
 
 template <class Node>
 void Factory::remove_receiver(NodeCollection<Node>& collection, ElementId id) {
