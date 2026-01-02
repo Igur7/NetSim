@@ -26,7 +26,7 @@ class Storehouse: public IPackageReceiver {
         Package releasePackage();
         ElementId get_id() const override { return id_; }
         ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
-
+        const IPackageQueue* get_queue() const { return queue_.get(); }
     private:
     std::unique_ptr<IPackageQueue> queue_;
     ElementId id_;

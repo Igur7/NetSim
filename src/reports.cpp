@@ -68,3 +68,77 @@ void generate_struture_report(const Factory& f, std::ostream& os){
     os << "STOREHOUSE #" << iter->get_id() << "\n\n";
   }
 }
+
+void generate_simulation_turn_report(const Factory& f, std::ostream& os, Time t) {
+
+    os << "=== [ Turn: " << std::to_string(t) << " ] ===\n\n";
+    os << "== WORKERS ==\n";
+
+    std::set<ElementId> worker_ids;
+    for (auto it = f.worker_cbegin(); it != f.worker_cend(); ++it) {
+        worker_ids.insert(it->get_id());
+    }
+
+    for (auto id : worker_ids) {
+        auto it = f.find_worker_by_id(id);
+        const Worker& worker = *it;
+
+        os << "WORKER #" << worker.get_id() << "\n";
+
+
+        const std::optional<Package>& pbuf = worker.get_processing_buffer();
+        if (pbuf.has_value()) {
+            os << "  PBuffer: #" << pbuf->getID()
+               << " (pt = " << std::to_string(t - worker.get_package_processing_start_time() + 1)
+               << ")\n";
+        } else {
+            os << "  PBuffer: (empty)\n";
+        }
+
+
+        if (worker.get_queue()->empty()) {
+            os << "  Queue: (empty)\n";
+        } else {
+            os << "  Queue:";
+            for (auto i = worker.get_queue()->cbegin(); i != worker.get_queue()->cend(); ++i) {
+                os << " #" << i->getID();
+                if (std::next(i) != worker.get_queue()->cend()) os << ",";
+            }
+            os << "\n";
+        }
+
+        const std::optional<Package>& sbuf = worker.get_sending_buffer();
+        if (sbuf.has_value()) {
+            os << "  SBuffer: #" << sbuf->getID() << "\n";
+        } else {
+            os << "  SBuffer: (empty)\n";
+        }
+
+        os << "\n";
+    }
+
+    os << "== STOREHOUSES ==\n\n";
+
+    std::set<ElementId> store_ids;
+    for (auto it = f.storehouse_cbegin(); it != f.storehouse_cend(); ++it) {
+        store_ids.insert(it->get_id());
+    }
+
+    for (auto id : store_ids) {
+        auto it = f.find_storehouse_by_id(id);  // iterator
+        const Storehouse& store = *it;
+
+        os << "STOREHOUSE #" << store.get_id() << "\n";
+
+        if (store.get_queue()->empty()) {
+            os << "  Stock: (empty)\n\n";
+        } else {
+            os << "  Stock:";
+            for (auto i = store.get_queue()->cbegin(); i != store.get_queue()->cend(); ++i) {
+                os << " #" << i->getID();
+                if (std::next(i) != store.get_queue()->cend()) os << ",";
+            }
+            os << "\n\n";
+        }
+    }
+}
