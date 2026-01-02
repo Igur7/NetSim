@@ -3,6 +3,13 @@
 #include "nodes.hpp"
 #include "types.hpp"
 
+template<typename T>
+std::shared_ptr<T> make_observer_ptr(T* ptr) {
+    return std::shared_ptr<T>(ptr, [](T*) {
+        // no-op deleter
+    });
+}
+
 TEST(NodeCollectionTest, FindById) {
     // Arrange
     NodeCollection<Ramp> collection;
@@ -52,13 +59,7 @@ TEST(FactoryTest, AddRampIncreasesRampCount) {
     EXPECT_EQ(std::distance(f.ramp_cbegin(), f.ramp_cend()), 1);
 }
 
-//is_consistent
-TEST(FactoryConsistencyTest, NoStorehouseIsInconsistent) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
 
-    EXPECT_FALSE(f.is_consistent());
-}
 
 //polaczenie reciever-worker po remove_worker
 TEST(FactoryTest, RemovingWorkerMakesFactoryInconsistent) {
@@ -77,4 +78,88 @@ TEST(FactoryTest, RemovingWorkerMakesFactoryInconsistent) {
     f.remove_worker(1);
 
     EXPECT_FALSE(f.is_consistent());
+}
+
+//is consistent z możliwą błędną drogą (exp: False)
+TEST(FactoryTest, IsConsistent_MixedWithCycle) {
+    // R -> W1 -> S
+    //      W1 -> W2 -> W2
+
+    Factory factory;
+    factory.add_ramp(Ramp(1, 1));
+    factory.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+    factory.add_worker(Worker(2, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+    factory.add_storehouse(Storehouse(1));
+
+    Ramp& r = *factory.find_ramp_by_id(1);
+    Worker& w1 = *factory.find_worker_by_id(1);
+    Worker& w2 = *factory.find_worker_by_id(2);
+    Storehouse& s = *factory.find_storehouse_by_id(1);
+
+    auto w1_ptr = make_observer_ptr<IPackageReceiver>(&w1);
+    auto w2_ptr = make_observer_ptr<IPackageReceiver>(&w2);
+    auto s_ptr  = make_observer_ptr<IPackageReceiver>(&s);
+
+    r.add_receiver(w1_ptr);
+
+    w1.add_receiver(s_ptr);
+    w1.add_receiver(w2_ptr);
+
+    w2.add_receiver(w2_ptr);
+
+    EXPECT_FALSE(factory.is_consistent());
+}
+//czy usuwanie workera uniemożliwia jego wylosowanie
+TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
+    Factory factory;
+    factory.add_ramp(Ramp(1, 1));
+    factory.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+    factory.add_worker(Worker(2, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+    factory.add_worker(Worker(3, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+
+    Ramp& r = *factory.find_ramp_by_id(1);
+    Worker& w1 = *factory.find_worker_by_id(1);
+    Worker& w2 = *factory.find_worker_by_id(2);
+    Worker& w3 = *factory.find_worker_by_id(3);
+
+    auto w1_ptr = make_observer_ptr<IPackageReceiver>(&w1);
+    auto w2_ptr = make_observer_ptr<IPackageReceiver>(&w2);
+    auto w3_ptr = make_observer_ptr<IPackageReceiver>(&w3);
+
+    r.add_receiver(w1_ptr);
+    r.add_receiver(w2_ptr);
+    r.add_receiver(w3_ptr);
+
+    factory.remove_worker(1);
+
+    const auto& prefs = r.get_receiver_preferences();
+    
+    ASSERT_EQ(prefs.size(), 2U);
+
+    auto it2 = prefs.find(w2_ptr);
+    ASSERT_NE(it2, prefs.end());
+    EXPECT_DOUBLE_EQ(it2->second, 1.0 / 2.0);
+
+    auto it3 = prefs.find(w3_ptr);
+    ASSERT_NE(it3, prefs.end());
+    EXPECT_DOUBLE_EQ(it3->second, 1.0 / 2.0);
+}
+
+//usuwanie nieistniejących workerów
+TEST(NodeCollectionTest, RemoveNonExistingIsNoOp) {
+    NodeCollection<Worker> col;
+    col.add(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+    col.add(Worker(2, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
+
+
+    size_t count_before = 0;
+    for (auto it = col.cbegin(); it != col.cend(); ++it) ++count_before;
+
+
+    col.remove_by_id(999);
+
+    size_t count_after = 0;
+    for (auto it = col.cbegin(); it != col.cend(); ++it) ++count_after;
+
+    EXPECT_EQ(count_before, count_after);
 }
