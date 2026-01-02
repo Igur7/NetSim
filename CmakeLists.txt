@@ -1,15 +1,13 @@
-cmake_minimum_required(VERSION 3.17) 
+cmake_minimum_required(VERSION 3.17)
 
-project(Netsim)  
+project(Netsim)
 
-set(CMAKE_CXX_STANDARD 17)  # Standard C++17
+set(CMAKE_CXX_STANDARD 17)
 
-# Ścieżka do katalogów z nagłówkami
+# Ścieżka do nagłówków
 include_directories(include)
 
-#Lista plików źródłowych
-set(SOURCE_FILES
-        main.cpp
+set(CORE_SOURCES
         src/simulation.cpp
         src/factory.cpp
         src/helpers.cpp
@@ -19,25 +17,31 @@ set(SOURCE_FILES
         src/storage_types.cpp
 )
 
+# 2. GŁÓWNA APLIKACJA
+add_executable(main main.cpp ${CORE_SOURCES})
 
-# Tworzenie pliku wykonywalnego
-add_executable(main main.cpp ${SOURCE_FILES})
+add_subdirectory(googletest-1.16.0 googletest-master)
 
-# Opcjonalnie, jeśli chcesz zainstalować projekt
-# install(TARGETS netsim DESTINATION bin)
 
-set(SOURCE_FILES_TESTS
+
+set(TEST_SOURCES
         test/test_storage.cpp
-)
+        test/test_factory.cpp  
+        )
 
-add_executable(Netsim_test ${SOURCE_FILES} ${SOURCE_FILES_TESTS} test/main_gtest.cpp)
+
+add_executable(Netsim_test 
+        test/main_gtest.cpp 
+        ${TEST_SOURCES} 
+        ${CORE_SOURCES}
+)
 
 target_include_directories(Netsim_test PUBLIC
         googletest-1.16.0/googlemock/include
         googletest-1.16.0/googletest/include
 )
 
+target_link_libraries(Netsim_test gtest gmock)
 
-add_subdirectory(googletest-1.16.0 googletest-master)
-
-target_link_libraries(Netsim_test gmock)
+enable_testing()
+add_test(NAME AllTests COMMAND Netsim_test)

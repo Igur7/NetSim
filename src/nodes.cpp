@@ -3,7 +3,7 @@
 Storehouse::Storehouse(ElementId id, std::unique_ptr<IPackageQueue> queue)
     : queue_(std::move(queue)), id_(id) {}
 
-void Storehouse::receivePackage(Package&& package) {
+void Storehouse::receive_package(Package&& package) {
     queue_->push(std::move(package));
 }
 
@@ -83,6 +83,10 @@ void Worker::do_work(Time t){// w symulacji update czasu t
 void Worker::receive_package(Package&& package) {
     queue_->push(std::move(package)); //zdejmuje paczke z kolejki i umieszcza w kolejce pracownika
 }
+
+ReceiverType Worker::get_receiver_type() const {
+    return ReceiverType::WORKER;
+}   
 
 void Ramp::deliver_goods(Time t) {
     if (!buffer_) {

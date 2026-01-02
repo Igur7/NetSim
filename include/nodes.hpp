@@ -7,28 +7,31 @@
 #include <optional> // for std::optional (C++17)
 #include "storage_types.hpp"
 
-class Storehouse{
+class IPackageReceiver {
+    public:
+        virtual void receive_package(Package&& package) = 0;
+        virtual ElementId get_id() const = 0;
+        virtual ~IPackageReceiver() = default;
+        virtual ReceiverType get_receiver_type() const = 0;
+};
+
+class Storehouse: public IPackageReceiver {
     public:
         explicit Storehouse(ElementId id,
         std::unique_ptr<IPackageQueue> queue =
             std::make_unique<PackageQueue>(PackageQueueType::Fifo)
         );
 
-        void receivePackage(Package&& package);
+        void receive_package(Package&& package) override;
         Package releasePackage();
-        ElementId get_id() const { return id_; }
+        ElementId get_id() const override { return id_; }
+        ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
 
     private:
     std::unique_ptr<IPackageQueue> queue_;
     ElementId id_;
 };  
 
-class IPackageReceiver {
-    public:
-        virtual void receive_package(Package&& package) = 0;
-        virtual ElementId get_id() const = 0;
-        virtual ~IPackageReceiver() = default;
-};
 
 class ReceiverPreferences {
     public:
@@ -45,12 +48,30 @@ class ReceiverPreferences {
 };
 
 class PackageSender {
+    //friend class Factory;
     public:
         PackageSender() = default;
+    
         PackageSender(PackageSender&&) = default;
+    
         void send_package();
+    
         const std::optional<Package>& get_sending_buffer() const { return sending_buffer_; }
+    
         void push_package(Package&& package) { sending_buffer_ = std::move(package); }
+        
+        //delegacja żeby działa enkapsulacja
+        void add_receiver(std::shared_ptr<IPackageReceiver> r) {
+            receiver_preferences_.add_receiver(r);
+        }   
+
+        void remove_receiver(std::shared_ptr<IPackageReceiver> r) {
+            receiver_preferences_.remove_receiver(r);
+        }
+
+        const auto& get_receiver_preferences() const {
+            return receiver_preferences_.get_preferences();
+        }
 
     protected:
         ReceiverPreferences receiver_preferences_;
@@ -75,8 +96,9 @@ class Worker : public IPackageReceiver, public PackageSender {
         
         const std::optional<Package>& get_processing_buffer() const { return _buffer_; } //zwraca referencje do optionala z przetwarzanym pakietem
         
-        std::unique_ptr<IPackageQueue>& get_queue() { return queue_; } // zwaraca referencje do uniqueptr na kolejke
+        const std::unique_ptr<IPackageQueue>& get_queue() const { return queue_; } // zwaraca referencje do uniqueptr na kolejke
 
+        ReceiverType get_receiver_type() const override;
     private:
         ElementId id_;
         TimeOffset process_durration_; //czas przetwarzania paczki przez danego workera
@@ -87,8 +109,7 @@ class Worker : public IPackageReceiver, public PackageSender {
 
 class Ramp: public PackageSender {
 public:
-    Ramp(ElementId id, TimeOffset di)
-    : PackageSender(), id_(id),di_(di){}
+    Ramp(ElementId id, TimeOffset di) :PackageSender(), id_(id),di_(di), time_(), buffer_(std::nullopt) {}
     void deliver_goods(Time t);
     TimeOffset get_delivery_interval() const;
     ElementId get_id() const;
@@ -97,5 +118,5 @@ private:
     ElementId id_;
     TimeOffset di_;
     Time time_;
-    std::optional<Package> buffer_ = std::nullopt;
+    std::optional<Package> buffer_;
 };
