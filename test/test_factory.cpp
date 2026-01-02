@@ -133,7 +133,7 @@ TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
     factory.remove_worker(1);
 
     const auto& prefs = r.get_receiver_preferences();
-    
+
     ASSERT_EQ(prefs.size(), 2U);
 
     auto it2 = prefs.find(w2_ptr);
@@ -162,4 +162,199 @@ TEST(NodeCollectionTest, RemoveNonExistingIsNoOp) {
     for (auto it = col.cbegin(); it != col.cend(); ++it) ++count_after;
 
     EXPECT_EQ(count_before, count_after);
+}
+
+TEST(LoadFactoryTest, LoadFactoryStructureAddsElements) {
+    std::istringstream input(
+        "LOADING_RAMP id=1 delivery-interval=2\n"
+        "WORKER id=1 processing-time=3 queue-type=FIFO\n"
+        "STOREHOUSE id=1\n"
+        "LINK src=ramp-1 dest=worker-1\n"
+        "LINK src=worker-1 dest=store-1\n"
+    );
+
+    IO io;
+    Factory factory = io.load_factory_structure(input);
+
+    // Sprawdzenie czy elementy zostały dodane
+    auto ramp_it = factory.find_ramp_by_id(1);
+    ASSERT_NE(ramp_it, factory.ramp_cend());
+    EXPECT_EQ(ramp_it->get_delivery_interval(), 2);
+
+    auto worker_it = factory.find_worker_by_id(1);
+    ASSERT_NE(worker_it, factory.worker_cend());
+    EXPECT_EQ(worker_it->get_processing_duration(), 3);
+    EXPECT_EQ(worker_it->get_queue()->getQueueType(), PackageQueueType::Fifo);
+
+    auto storehouse_it = factory.find_storehouse_by_id(1);
+    ASSERT_NE(storehouse_it, factory.storehouse_cend());
+
+    // Sprawdzenie czy połączenia zostały utworzone
+    const auto& ramp_prefs = ramp_it->get_receiver_preferences();
+    ASSERT_EQ(ramp_prefs.size(), 1);
+    EXPECT_EQ(ramp_prefs.begin()->first->get_id(), 1); // worker-1
+
+    const auto& worker_prefs = worker_it->get_receiver_preferences();
+    ASSERT_EQ(worker_prefs.size(), 1);
+    EXPECT_EQ(worker_prefs.begin()->first->get_id(), 1); // storehouse-1
+}
+
+TEST(LoadFactoryTest, LoadFullFactoryStructure) {
+    std::istringstream input(
+        "; == LOADING RAMPS ==\n"
+        "\n"
+        "LOADING_RAMP id=1 delivery-interval=3\n"
+        "LOADING_RAMP id=2 delivery-interval=2\n"
+        "\n"
+        "; == WORKERS ==\n"
+        "\n"
+        "WORKER id=1 processing-time=2 queue-type=FIFO\n"
+        "WORKER id=2 processing-time=1 queue-type=LIFO\n"
+        "\n"
+        "; == STOREHOUSES ==\n"
+        "\n"
+        "STOREHOUSE id=1\n"
+        "\n"
+        "; == LINKS ==\n"
+        "\n"
+        "LINK src=ramp-1 dest=worker-1\n"
+        "\n"
+        "LINK src=ramp-2 dest=worker-1\n"
+        "LINK src=ramp-2 dest=worker-2\n"
+        "\n"
+        "LINK src=worker-1 dest=worker-1\n"
+        "LINK src=worker-1 dest=worker-2\n"
+        "\n"
+        "LINK src=worker-2 dest=store-1\n"
+    );
+
+    IO io;
+    Factory factory = io.load_factory_structure(input);
+
+    /* ===== RAMPS ===== */
+    auto r1 = factory.find_ramp_by_id(1);
+    auto r2 = factory.find_ramp_by_id(2);
+
+    ASSERT_NE(r1, factory.ramp_cend());
+    ASSERT_NE(r2, factory.ramp_cend());
+
+    EXPECT_EQ(r1->get_delivery_interval(), 3);
+    EXPECT_EQ(r2->get_delivery_interval(), 2);
+
+    /* ===== WORKERS ===== */
+    auto w1 = factory.find_worker_by_id(1);
+    auto w2 = factory.find_worker_by_id(2);
+
+    ASSERT_NE(w1, factory.worker_cend());
+    ASSERT_NE(w2, factory.worker_cend());
+
+    EXPECT_EQ(w1->get_processing_duration(), 2);
+    EXPECT_EQ(w2->get_processing_duration(), 1);
+
+    EXPECT_EQ(w1->get_queue()->getQueueType(), PackageQueueType::Fifo);
+    EXPECT_EQ(w2->get_queue()->getQueueType(), PackageQueueType::Lifo);
+
+    /* ===== STOREHOUSE ===== */
+    auto s1 = factory.find_storehouse_by_id(1);
+    ASSERT_NE(s1, factory.storehouse_cend());
+
+    /* ===== LINKS: RAMPS ===== */
+    const auto& r1_prefs = r1->get_receiver_preferences();
+    ASSERT_EQ(r1_prefs.size(), 1);
+    EXPECT_EQ(r1_prefs.begin()->first->get_id(), 1); // worker-1
+
+    const auto& r2_prefs = r2->get_receiver_preferences();
+    ASSERT_EQ(r2_prefs.size(), 2);
+
+    std::set<ElementId> r2_targets;
+    for (const auto& [receiver, _] : r2_prefs) {
+        r2_targets.insert(receiver->get_id());
+    }
+
+    EXPECT_TRUE(r2_targets.count(1)); // worker-1
+    EXPECT_TRUE(r2_targets.count(2)); // worker-2
+
+    /* ===== LINKS: WORKER-1 ===== */
+    const auto& w1_prefs = w1->get_receiver_preferences();
+    ASSERT_EQ(w1_prefs.size(), 2);
+
+    std::set<ElementId> w1_targets;
+    for (const auto& [receiver, _] : w1_prefs) {
+        w1_targets.insert(receiver->get_id());
+    }
+
+    EXPECT_TRUE(w1_targets.count(1)); // self-loop
+    EXPECT_TRUE(w1_targets.count(2)); // worker-2
+
+    /* ===== LINKS: WORKER-2 ===== */
+    const auto& w2_prefs = w2->get_receiver_preferences();
+    ASSERT_EQ(w2_prefs.size(), 1);
+
+    auto receiver = w2_prefs.begin()->first;
+    EXPECT_EQ(receiver->get_receiver_type(), ReceiverType::STOREHOUSE);
+    EXPECT_EQ(receiver->get_id(), 1);
+
+    /* ===== CONSISTENCY ===== */
+    EXPECT_TRUE(factory.is_consistent());
+}
+
+
+TEST(SaveFactoryTest, SaveFactoryStructureToTxt) {
+    std::istringstream input(
+        "; == LOADING RAMPS ==\n"
+        "\n"
+        "LOADING_RAMP id=1 delivery-interval=3\n"
+        "LOADING_RAMP id=2 delivery-interval=2\n"
+        "\n"
+        "; == WORKERS ==\n"
+        "\n"
+        "WORKER id=1 processing-time=2 queue-type=FIFO\n"
+        "WORKER id=2 processing-time=1 queue-type=LIFO\n"
+        "\n"
+        "; == STOREHOUSES ==\n"
+        "\n"
+        "STOREHOUSE id=1\n"
+        "\n"
+        "; == LINKS ==\n"
+        "\n"
+        "LINK src=ramp-1 dest=worker-1\n"
+        "\n"
+        "LINK src=ramp-2 dest=worker-1\n"
+        "LINK src=ramp-2 dest=worker-2\n"
+        "\n"
+        "LINK src=worker-1 dest=worker-1\n"
+        "LINK src=worker-1 dest=worker-2\n"
+        "\n"
+        "LINK src=worker-2 dest=store-1\n"
+    );
+
+    IO io;
+    Factory factory = io.load_factory_structure(input);
+
+    std::ostringstream output;
+    io.save_factory_structure(factory, output);
+
+    std::string saved = output.str();
+
+    /* ===== SPRAWDZANIE DEFINICJI ===== */
+
+    EXPECT_NE(saved.find("LOADING_RAMP id=1 delivery-interval=3"), std::string::npos);
+    EXPECT_NE(saved.find("LOADING_RAMP id=2 delivery-interval=2"), std::string::npos);
+
+    EXPECT_NE(saved.find("WORKER id=1 processing-time=2 queue-type=FIFO"), std::string::npos);
+    EXPECT_NE(saved.find("WORKER id=2 processing-time=1 queue-type=LIFO"), std::string::npos);
+
+    EXPECT_NE(saved.find("STOREHOUSE id=1"), std::string::npos);
+
+    /* ===== SPRAWDZANIE LINKÓW ===== */
+
+    EXPECT_NE(saved.find("LINK src=ramp-1 dest=worker-1"), std::string::npos);
+
+    EXPECT_NE(saved.find("LINK src=ramp-2 dest=worker-1"), std::string::npos);
+    EXPECT_NE(saved.find("LINK src=ramp-2 dest=worker-2"), std::string::npos);
+
+    EXPECT_NE(saved.find("LINK src=worker-1 dest=worker-1"), std::string::npos);
+    EXPECT_NE(saved.find("LINK src=worker-1 dest=worker-2"), std::string::npos);
+
+    EXPECT_NE(saved.find("LINK src=worker-2 dest=store-1"), std::string::npos);
 }

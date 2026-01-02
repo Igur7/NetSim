@@ -87,3 +87,25 @@ public:
     NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const;
     NodeCollection<Storehouse>::const_iterator storehouse_cend() const;
 };
+
+enum class ElementType{
+    RAMP,
+    WORKER,
+    STOREHOUSE,
+    LINK
+};
+
+struct ParsedLineData{
+    ElementType element_type;
+    std::map<std::string, std::string> parameters;
+};
+
+// IO handler for loading and saving factory structure
+class IO{
+    public:
+    Factory load_factory_structure(std::istream& is);
+    void save_factory_structure(Factory& factory, std::ostream& os);
+    std::vector<std::string> tokenize(std::string str, char delimiter);
+    ParsedLineData parse_line(const std::string& line);
+    
+};

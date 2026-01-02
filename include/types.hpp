@@ -8,3 +8,9 @@ enum class ReceiverType {
     WORKER,
     STOREHOUSE
 };
+
+enum class NodeType{
+    RAMP,
+    WORKER,
+    STOREHOUSE
+};
