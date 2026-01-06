@@ -1,7 +1,7 @@
 
 #include "reports.hpp"
 
-void generate_struture_report(const Factory& f, std::ostream& os){
+void generate_structure_report(const Factory& f, std::ostream& os){
   os << "\n== LOADING RAMPS ==\n\n";
   //id rosnąco
 

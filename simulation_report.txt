@@ -1,0 +1,92 @@
+
+== LOADING RAMPS ==
+
+LOADING_RAMP id=1
+Delivery interval: 3
+Receivers:
+worker 1
+
+LOADING_RAMP id=2
+Delivery interval: 2
+Receivers:
+worker 1
+worker 2
+
+
+== WORKERS ==
+
+WORKER #1
+Processing time: 2
+Queue type:Fifo
+Receivers:
+worker 1
+worker 2
+
+WORKER #2
+Processing time: 1
+Queue type:Lifo
+Receivers:
+storehouse #1
+
+
+==STOREHOUSES ==
+
+STOREHOUSE #1
+
+=== [ Turn: 0 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: (empty)
+
+
+=== [ Turn: 1 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: (empty)
+
+
+=== [ Turn: 2 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #2 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: (empty)
+
+

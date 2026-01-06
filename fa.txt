@@ -1,0 +1,25 @@
+; == LOADING RAMPS ==
+
+LOADING_RAMP id=1 delivery-interval=3
+LOADING_RAMP id=2 delivery-interval=2
+
+; == WORKERS ==
+
+WORKER id=1 processing-time=2 queue-type=FIFO
+WORKER id=2 processing-time=1 queue-type=LIFO
+
+; == STOREHOUSES ==
+
+STOREHOUSE id=1
+
+; == LINKS ==
+
+LINK src=ramp-1 dest=worker-1
+
+LINK src=ramp-2 dest=worker-1
+LINK src=ramp-2 dest=worker-2
+
+LINK src=worker-1 dest=worker-1
+LINK src=worker-1 dest=worker-2
+
+LINK src=worker-2 dest=store-1

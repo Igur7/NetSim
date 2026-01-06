@@ -20,4 +20,8 @@ class SpecificTurnsReportNotifier{
         std::set<Time> turns_;
 };
 
-void simulate(Factory& factory, TimeOffset d, std::function<void(Factory&, TimeOffset)> && rf);
+void simulate(
+    Factory& factory,
+    TimeOffset d,
+    std::function<void(Factory&, TimeOffset)> rf
+);
