@@ -440,3 +440,62 @@ void IO::save_factory_structure(Factory& factory, std::ostream& os){
 
     os.flush();
 }
+
+void IO::save_factory_graphviz(const Factory& factory, std::ostream& os) {
+    os << "digraph Factory {\n";
+    os << "  rankdir=LR;\n";
+    os << "  node [shape=circle, style=filled];\n\n";
+
+    // RAMPY
+    for (const auto& ramp : factory.ramps_) {
+        os << "  R" << ramp.get_id()
+           << " [label=\"R" << ramp.get_id()
+           << "\", fillcolor=\"#cfe8c1\"];\n";
+    }
+
+    // WORKERY
+    for (const auto& worker : factory.workers_) {
+        os << "  W" << worker.get_id()
+           << " [label=\"W" << worker.get_id()
+           << "\", fillcolor=\"#dbe9ff\"];\n";
+    }
+
+    // STOREHOUSE
+    for (const auto& store : factory.storehouses_) {
+        os << "  S" << store.get_id()
+           << " [label=\"S" << store.get_id()
+           << "\", fillcolor=\"#ffe6c7\"];\n";
+    }
+
+    os << "\n";
+    // POŁĄCZENIA
+        // KRAWĘDZIE Z RAMP
+    for (const auto& ramp : factory.ramps_) {
+        const auto& prefs = ramp.get_receiver_preferences();
+        for (const auto& [receiver, _] : prefs) {
+
+            if (receiver->get_receiver_type() == ReceiverType::WORKER) {
+                os << "  R" << ramp.get_id()
+                   << " -> W" << receiver->get_id() << ";\n";
+            }
+        }
+    }
+
+    // KRAWĘDZIE Z WORKERÓW
+    for (const auto& worker : factory.workers_) {
+        const auto& prefs = worker.get_receiver_preferences();
+        for (const auto& [receiver, _] : prefs) {
+
+            if (receiver->get_receiver_type() == ReceiverType::WORKER) {
+                os << "  W" << worker.get_id()
+                   << " -> W" << receiver->get_id() << ";\n";
+            }
+            else if (receiver->get_receiver_type() == ReceiverType::STOREHOUSE) {
+                os << "  W" << worker.get_id()
+                   << " -> S" << receiver->get_id() << ";\n";
+            }
+        }
+    }
+
+    os << "}\n";
+}

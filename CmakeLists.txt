@@ -43,5 +43,19 @@ target_include_directories(Netsim_test PUBLIC
 
 target_link_libraries(Netsim_test gtest gmock)
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/data/fa.txt
+    ${CMAKE_BINARY_DIR}/fa.txt
+    COPYONLY
+)
+
+find_program(DOT_EXECUTABLE dot)
+
+if (DOT_EXECUTABLE)
+    message(STATUS "Graphviz found: ${DOT_EXECUTABLE}")
+else()
+    message(WARNING "Graphviz NOT found – PNG will not be generated")
+endif()
+
 enable_testing()
 add_test(NAME AllTests COMMAND Netsim_test)

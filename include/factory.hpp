@@ -56,6 +56,7 @@ private:
 };
 
 class Factory {
+    friend class IO;
 private:
     template<class Node>
     void remove_receiver(NodeCollection<Node>& collection, ElementId id);
@@ -105,11 +106,13 @@ struct ParsedLineData{
 
 // IO handler for loading and saving factory structure
 class IO{
+    friend class Factory;
     public:
     Factory load_factory_structure(std::istream& is);
     void save_factory_structure(Factory& factory, std::ostream& os);
     std::vector<std::string> tokenize(std::string str, char delimiter);
     ParsedLineData parse_line(const std::string& line);
+    void save_factory_graphviz(const Factory& factory, std::ostream& os);
     
 };
 
