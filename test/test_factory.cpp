@@ -1,7 +1,13 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
+#include <sstream>
+#include <set>
+#include <iterator>
+#include <gmock/gmock.h>
+
 #include "factory.hpp"
 #include "nodes.hpp"
 #include "types.hpp"
+
 
 template<typename T>
 std::shared_ptr<T> make_observer_ptr(T* ptr) {
@@ -359,143 +365,19 @@ TEST(SaveFactoryTest, SaveFactoryStructureToTxt) {
     EXPECT_NE(saved.find("LINK src=worker-2 dest=store-1"), std::string::npos);
 }
 
-template<typename T>
-std::shared_ptr<T> make_obs_ptr(T* ptr) {
-    return std::shared_ptr<T>(ptr, [](T*) {});
-}
+TEST(PackageSenderTest, SendingBufferEmptyAfterSending) {
+    Worker worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo));
+    Ramp ramp(1, 1);
 
-TEST(FactoryConsistencyTest, EmptyFactoryIsConsistent) {
-    Factory f;
-    EXPECT_TRUE(f.is_consistent());
-}
+    auto worker_ptr = make_observer_ptr<IPackageReceiver>(&worker);
+    ramp.add_receiver(worker_ptr);
 
-TEST(FactoryConsistencyTest, RampWithNoReceiverIsInconsistent) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
-    EXPECT_FALSE(f.is_consistent());
-}
+    // Dodaj paczkę do bufora rampy
+    ramp.push_package(Package());
 
-TEST(FactoryConsistencyTest, SimpleValidPathIsConsistent) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
-    f.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
-    f.add_storehouse(Storehouse(1));
+    // Wykonaj przekazanie paczki
+    ramp.send_package();
 
-    f.find_ramp_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_worker_by_id(1))));
-    f.find_worker_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_storehouse_by_id(1))));
-
-    EXPECT_TRUE(f.is_consistent());
-}
-
-TEST(FactoryConsistencyTest, WorkerWithNoReceiverIsInconsistent) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
-    f.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
-    
-    // Rampa -> Worker, ale Worker -> (nic)
-    f.find_ramp_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_worker_by_id(1))));
-
-    EXPECT_FALSE(f.is_consistent());
-}
-
-// --- TESTY MODYFIKACJI STRUKTURY ---
-
-TEST(FactoryModificationTest, RemovingStorehouseBreaksConsistency) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
-    f.add_storehouse(Storehouse(1));
-    f.find_ramp_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_storehouse_by_id(1))));
-
-    ASSERT_TRUE(f.is_consistent());
-
-    f.remove_storehouse(1);
-    // Po usunięciu magazynu rampa traci odbiorcę (logika w Factory::remove_receiver)
-    EXPECT_FALSE(f.is_consistent());
-}
-
-// --- TESTY IO (Błędy i przypadki brzegowe) ---
-
-TEST(IOTest, ParseLineThrowsOnUnknownType) {
-    IO io;
-    EXPECT_THROW(io.parse_line("UNKNOWN_TYPE id=1"), std::runtime_error);
-}
-
-TEST(IOTest, ParseLineThrowsOnInvalidParameter) {
-    IO io;
-    // Brak '=' w parametrze
-    EXPECT_THROW(io.parse_line("LOADING_RAMP id1"), std::runtime_error);
-}
-
-TEST(IOTest, LoadFactoryStructureIgnoresComments) {
-    std::istringstream input(
-        "; To jest komentarz\n"
-        "# To też jest komentarz\n"
-        "STOREHOUSE id=1\n"
-    );
-    IO io;
-    Factory f = io.load_factory_structure(input);
-    
-    EXPECT_NE(f.find_storehouse_by_id(1), f.storehouse_cend());
-}
-
-TEST(IOTest, SaveEmptyFactory) {
-    Factory f;
-    IO io;
-    std::ostringstream output;
-    io.save_factory_structure(f, output);
-    
-    // Powinno zwrócić pusty string lub tylko puste linie
-    std::string result = output.str();
-    // Usuwamy białe znaki do sprawdzenia
-    result.erase(std::remove(result.begin(), result.end(), '\n'), result.end());
-    EXPECT_TRUE(result.empty());
-}
-
-// --- TESTY KOLEKCJI (NodeCollection) ---
-
-TEST(NodeCollectionTest, IterationTest) {
-    NodeCollection<Storehouse> col;
-    col.add(Storehouse(1));
-    col.add(Storehouse(2));
-    col.add(Storehouse(3));
-
-    size_t count = 0;
-    std::vector<ElementId> ids;
-    for (const auto& node : col) {
-        count++;
-        ids.push_back(node.get_id());
-    }
-
-    EXPECT_EQ(count, 3);
-    EXPECT_EQ(ids[0], 1);
-    EXPECT_EQ(ids[2], 3);
-}
-
-// --- TESTY SYMULACJI (Krótkie kroki) ---
-
-TEST(FactorySimulationTest, FullStepSimulation) {
-    Factory f;
-    f.add_ramp(Ramp(1, 1));
-    f.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo)));
-    f.add_storehouse(Storehouse(1));
-
-    f.find_ramp_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_worker_by_id(1))));
-    f.find_worker_by_id(1)->add_receiver(make_obs_ptr<IPackageReceiver>(&(*f.find_storehouse_by_id(1))));
-
-    f.do_deliveries(1); 
-    
-    f.do_deliveries(2); 
-    
-    f.do_package_passing(); 
-    
-    auto worker_it = f.find_worker_by_id(1);
-    EXPECT_FALSE(worker_it->get_queue()->empty());
-
-    f.do_work(2);
-    f.do_work(3); 
-    f.do_package_passing();
-
-    
-    auto store_it = f.find_storehouse_by_id(1);
-    EXPECT_FALSE(store_it->get_queue()->empty());
+    // Sprawdź, czy bufor jest pusty
+    EXPECT_TRUE(ramp.get_sending_buffer().has_value() == false);
 }

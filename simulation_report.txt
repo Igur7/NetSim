@@ -5,52 +5,65 @@ LOADING_RAMP id=1
 Delivery interval: 3
 Receivers:
 worker 1
+worker 2
 
 LOADING_RAMP id=2
 Delivery interval: 2
 Receivers:
-worker 1
 worker 2
+worker 5
+
+LOADING_RAMP id=3
+Delivery interval: 1
+Receivers:
+worker 3
+worker 4
 
 
 == WORKERS ==
 
 WORKER #1
 Processing time: 2
-Queue type:Fifo
+Queue type: Fifo
 Receivers:
 worker 1
 worker 2
 
 WORKER #2
 Processing time: 1
-Queue type:Lifo
+Queue type: Lifo
 Receivers:
 storehouse #1
+storehouse #2
+
+WORKER #3
+Processing time: 2
+Queue type: Fifo
+Receivers:
+worker 2
+worker 3
+worker 4
+
+WORKER #4
+Processing time: 1
+Queue type: Lifo
+Receivers:
+storehouse #1
+storehouse #2
+
+WORKER #5
+Processing time: 2
+Queue type: Fifo
+Receivers:
+worker 4
+worker 5
 
 
 ==STOREHOUSES ==
 
 STOREHOUSE #1
 
-=== [ Turn: 0 ] ===
-
-== WORKERS ==
-WORKER #1
-  PBuffer: (empty)
-  Queue: (empty)
-  SBuffer: (empty)
-
-WORKER #2
-  PBuffer: (empty)
-  Queue: (empty)
-  SBuffer: (empty)
-
-== STOREHOUSES ==
-
-STOREHOUSE #1
-  Stock: (empty)
-
+STOREHOUSE #2
 
 === [ Turn: 1 ] ===
 
@@ -65,21 +78,17 @@ WORKER #2
   Queue: (empty)
   SBuffer: (empty)
 
-== STOREHOUSES ==
-
-STOREHOUSE #1
-  Stock: (empty)
-
-
-=== [ Turn: 2 ] ===
-
-== WORKERS ==
-WORKER #1
-  PBuffer: #2 (pt = 1)
+WORKER #3
+  PBuffer: #1 (pt = 1)
   Queue: (empty)
   SBuffer: (empty)
 
-WORKER #2
+WORKER #4
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #5
   PBuffer: (empty)
   Queue: (empty)
   SBuffer: (empty)
@@ -88,5 +97,2450 @@ WORKER #2
 
 STOREHOUSE #1
   Stock: (empty)
+
+STOREHOUSE #2
+  Stock: (empty)
+
+
+=== [ Turn: 2 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #1 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #3 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #2 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: (empty)
+
+STOREHOUSE #2
+  Stock: (empty)
+
+
+=== [ Turn: 3 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #4 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #1
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #5
+  SBuffer: #3
+
+WORKER #5
+  PBuffer: #2 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: (empty)
+
+STOREHOUSE #2
+  Stock: (empty)
+
+
+=== [ Turn: 4 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #4 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #1 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #7 (pt = 1)
+  Queue: #5
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #6
+  SBuffer: #2
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3
+
+STOREHOUSE #2
+  Stock: (empty)
+
+
+=== [ Turn: 5 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #4
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #1 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #5, #8, #2
+  SBuffer: #7
+
+WORKER #5
+  PBuffer: #6 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3
+
+STOREHOUSE #2
+  Stock: (empty)
+
+
+=== [ Turn: 6 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #4 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #11
+  SBuffer: #1
+
+WORKER #4
+  PBuffer: #2 (pt = 1)
+  Queue: #5, #8
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #6 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3
+
+STOREHOUSE #2
+  Stock: #7
+
+
+=== [ Turn: 7 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10, #1
+  SBuffer: #4
+
+WORKER #3
+  PBuffer: #11 (pt = 1)
+  Queue: #12
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #5, #8
+  SBuffer: #2
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #6
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3
+
+STOREHOUSE #2
+  Stock: #7
+
+
+=== [ Turn: 8 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #1 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #11 (pt = 2)
+  Queue: #12, #14
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #8 (pt = 1)
+  Queue: #5
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #13 (pt = 1)
+  Queue: #6
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2
+
+STOREHOUSE #2
+  Stock: #7
+
+
+=== [ Turn: 9 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10, #15
+  SBuffer: #1
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #12, #14, #16
+  SBuffer: #11
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #5
+  SBuffer: #8
+
+WORKER #5
+  PBuffer: #13 (pt = 2)
+  Queue: #6
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2
+
+STOREHOUSE #2
+  Stock: #7
+
+
+=== [ Turn: 10 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #15 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #12 (pt = 1)
+  Queue: #14, #16, #18, #11
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #5 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #6, #17
+  SBuffer: #13
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1
+
+STOREHOUSE #2
+  Stock: #7, #8
+
+
+=== [ Turn: 11 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10
+  SBuffer: #15
+
+WORKER #3
+  PBuffer: #12 (pt = 2)
+  Queue: #14, #16, #18, #11, #19
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #5
+
+WORKER #5
+  PBuffer: #6 (pt = 1)
+  Queue: #17, #13
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1
+
+STOREHOUSE #2
+  Stock: #7, #8
+
+
+=== [ Turn: 12 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #20 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #14, #16, #18, #11, #19, #22
+  SBuffer: #12
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #6 (pt = 2)
+  Queue: #17, #13, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5
+
+STOREHOUSE #2
+  Stock: #7, #8
+
+
+=== [ Turn: 13 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10
+  SBuffer: #20
+
+WORKER #3
+  PBuffer: #14 (pt = 1)
+  Queue: #16, #18, #11, #19, #22, #23, #12
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #17, #13, #21
+  SBuffer: #6
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5
+
+STOREHOUSE #2
+  Stock: #7, #8
+
+
+=== [ Turn: 14 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #24 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #14 (pt = 2)
+  Queue: #16, #18, #11, #19, #22, #23, #12
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #6 (pt = 1)
+  Queue: #25
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #17 (pt = 1)
+  Queue: #13, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5
+
+STOREHOUSE #2
+  Stock: #7, #8, #20
+
+
+=== [ Turn: 15 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10, #26
+  SBuffer: #24
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #16, #18, #11, #19, #22, #23, #12, #27
+  SBuffer: #14
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25
+  SBuffer: #6
+
+WORKER #5
+  PBuffer: #17 (pt = 2)
+  Queue: #13, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5
+
+STOREHOUSE #2
+  Stock: #7, #8, #20
+
+
+=== [ Turn: 16 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #26 (pt = 1)
+  Queue: #9, #10
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #16 (pt = 1)
+  Queue: #18, #11, #19, #22, #23, #12, #27, #29
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #14 (pt = 1)
+  Queue: #25
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #13, #21, #28
+  SBuffer: #17
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24
+
+
+=== [ Turn: 17 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #10
+  SBuffer: #26
+
+WORKER #3
+  PBuffer: #16 (pt = 2)
+  Queue: #18, #11, #19, #22, #23, #12, #27, #29, #30
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17
+  SBuffer: #14
+
+WORKER #5
+  PBuffer: #13 (pt = 1)
+  Queue: #21, #28
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24
+
+
+=== [ Turn: 18 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #31 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #10 (pt = 1)
+  Queue: #9
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #18, #11, #19, #22, #23, #12, #27, #29, #30
+  SBuffer: #16
+
+WORKER #4
+  PBuffer: #33 (pt = 1)
+  Queue: #25, #17
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #13 (pt = 2)
+  Queue: #21, #28, #32
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24
+
+
+=== [ Turn: 19 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #31 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9
+  SBuffer: #10
+
+WORKER #3
+  PBuffer: #18 (pt = 1)
+  Queue: #11, #19, #22, #23, #12, #27, #29, #30, #16
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #34
+  SBuffer: #33
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #21, #28, #32
+  SBuffer: #13
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24
+
+
+=== [ Turn: 20 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #31
+
+WORKER #2
+  PBuffer: #35 (pt = 1)
+  Queue: #9
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #18 (pt = 2)
+  Queue: #11, #19, #22, #23, #12, #27, #29, #30, #16, #36
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #13 (pt = 1)
+  Queue: #25, #17, #34
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #21 (pt = 1)
+  Queue: #28, #32
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33
+
+
+=== [ Turn: 21 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #31 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #37
+  SBuffer: #35
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #11, #19, #22, #23, #12, #27, #29, #30, #16, #36, #38
+  SBuffer: #18
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #34
+  SBuffer: #13
+
+WORKER #5
+  PBuffer: #21 (pt = 2)
+  Queue: #28, #32
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33
+
+
+=== [ Turn: 22 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #31 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #37 (pt = 1)
+  Queue: #9
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #11 (pt = 1)
+  Queue: #19, #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #34 (pt = 1)
+  Queue: #25, #17
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #28, #32, #39
+  SBuffer: #21
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13
+
+
+=== [ Turn: 23 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #31
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9
+  SBuffer: #37
+
+WORKER #3
+  PBuffer: #11 (pt = 2)
+  Queue: #19, #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41
+  SBuffer: #34
+
+WORKER #5
+  PBuffer: #28 (pt = 1)
+  Queue: #32, #39, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13
+
+
+=== [ Turn: 24 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #31 (pt = 1)
+  Queue: #9, #42
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #19, #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18
+  SBuffer: #11
+
+WORKER #4
+  PBuffer: #44 (pt = 1)
+  Queue: #25, #17, #41
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #28 (pt = 2)
+  Queue: #32, #39, #21, #43
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37
+
+
+=== [ Turn: 25 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #42
+  SBuffer: #31
+
+WORKER #3
+  PBuffer: #19 (pt = 1)
+  Queue: #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #11
+  SBuffer: #44
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #32, #39, #21, #43
+  SBuffer: #28
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37
+
+
+=== [ Turn: 26 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #42 (pt = 1)
+  Queue: #9
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #19 (pt = 2)
+  Queue: #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #11 (pt = 1)
+  Queue: #25, #17, #41
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #32 (pt = 1)
+  Queue: #39, #21, #43, #46, #28
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44
+
+
+=== [ Turn: 27 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48
+  SBuffer: #42
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #22, #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49
+  SBuffer: #19
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41
+  SBuffer: #11
+
+WORKER #5
+  PBuffer: #32 (pt = 2)
+  Queue: #39, #21, #43, #46, #28
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44
+
+
+=== [ Turn: 28 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #50 (pt = 1)
+  Queue: #9, #48
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #22 (pt = 1)
+  Queue: #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #51 (pt = 1)
+  Queue: #25, #17, #41
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #39, #21, #43, #46, #28
+  SBuffer: #32
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 29 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48
+  SBuffer: #50
+
+WORKER #3
+  PBuffer: #22 (pt = 2)
+  Queue: #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32
+  SBuffer: #51
+
+WORKER #5
+  PBuffer: #39 (pt = 1)
+  Queue: #21, #43, #46, #28
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 30 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #54 (pt = 1)
+  Queue: #9, #48, #53
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #23, #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: #22
+
+WORKER #4
+  PBuffer: #55 (pt = 1)
+  Queue: #25, #17, #41, #52, #32
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #39 (pt = 2)
+  Queue: #21, #43, #46, #28
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 31 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48, #53, #22
+  SBuffer: #54
+
+WORKER #3
+  PBuffer: #23 (pt = 1)
+  Queue: #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #56
+  SBuffer: #55
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #21, #43, #46, #28
+  SBuffer: #39
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 32 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #22 (pt = 1)
+  Queue: #9, #48, #53
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #23 (pt = 2)
+  Queue: #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #58 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #56
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #21 (pt = 1)
+  Queue: #43, #46, #28, #57, #39
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 33 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #59 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48, #53
+  SBuffer: #22
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #12, #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19
+  SBuffer: #23
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #56, #60
+  SBuffer: #58
+
+WORKER #5
+  PBuffer: #21 (pt = 2)
+  Queue: #43, #46, #28, #57, #39
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 34 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #59 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #23 (pt = 1)
+  Queue: #9, #48, #53
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #12 (pt = 1)
+  Queue: #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #60 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #56
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #43, #46, #28, #57, #39, #61
+  SBuffer: #21
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 35 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #59
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48, #53
+  SBuffer: #23
+
+WORKER #3
+  PBuffer: #12 (pt = 2)
+  Queue: #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #56
+  SBuffer: #60
+
+WORKER #5
+  PBuffer: #43 (pt = 1)
+  Queue: #46, #28, #57, #39, #61, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42
+
+
+=== [ Turn: 36 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #59 (pt = 1)
+  Queue: #9, #48, #53, #64
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #27, #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66
+  SBuffer: #12
+
+WORKER #4
+  PBuffer: #56 (pt = 1)
+  Queue: #25, #17, #41, #52, #32
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #43 (pt = 2)
+  Queue: #46, #28, #57, #39, #61, #21, #65
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60
+
+
+=== [ Turn: 37 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48, #53, #64
+  SBuffer: #59
+
+WORKER #3
+  PBuffer: #27 (pt = 1)
+  Queue: #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #12
+  SBuffer: #56
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #46, #28, #57, #39, #61, #21, #65
+  SBuffer: #43
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60
+
+
+=== [ Turn: 38 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #64 (pt = 1)
+  Queue: #9, #48, #53
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #27 (pt = 2)
+  Queue: #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #12 (pt = 1)
+  Queue: #25, #17, #41, #52, #32
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #46 (pt = 1)
+  Queue: #28, #57, #39, #61, #21, #65, #68, #43
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56
+
+
+=== [ Turn: 39 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48, #53
+  SBuffer: #64
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #29, #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71
+  SBuffer: #27
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32
+  SBuffer: #12
+
+WORKER #5
+  PBuffer: #46 (pt = 2)
+  Queue: #28, #57, #39, #61, #21, #65, #68, #43
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56
+
+
+=== [ Turn: 40 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #53 (pt = 1)
+  Queue: #9, #48
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #29 (pt = 1)
+  Queue: #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #27 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #28, #57, #39, #61, #21, #65, #68, #43, #72
+  SBuffer: #46
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12
+
+
+=== [ Turn: 41 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #70
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48
+  SBuffer: #53
+
+WORKER #3
+  PBuffer: #29 (pt = 2)
+  Queue: #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #74
+  SBuffer: #27
+
+WORKER #5
+  PBuffer: #28 (pt = 1)
+  Queue: #57, #39, #61, #21, #65, #68, #43, #72, #46
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12
+
+
+=== [ Turn: 42 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #75 (pt = 1)
+  Queue: #9, #48
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #30, #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77
+  SBuffer: #29
+
+WORKER #4
+  PBuffer: #74 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #28 (pt = 2)
+  Queue: #57, #39, #61, #21, #65, #68, #43, #72, #46, #76
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12
+
+
+=== [ Turn: 43 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #48
+  SBuffer: #75
+
+WORKER #3
+  PBuffer: #30 (pt = 1)
+  Queue: #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73
+  SBuffer: #74
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #57, #39, #61, #21, #65, #68, #43, #72, #46, #76
+  SBuffer: #28
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12
+
+
+=== [ Turn: 44 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #70
+
+WORKER #2
+  PBuffer: #48 (pt = 1)
+  Queue: #9
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #30 (pt = 2)
+  Queue: #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #28 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #57 (pt = 1)
+  Queue: #39, #61, #21, #65, #68, #43, #72, #46, #76, #79
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75
+
+
+=== [ Turn: 45 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 1)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81
+  SBuffer: #48
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #16, #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80
+  SBuffer: #30
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: #28
+
+WORKER #5
+  PBuffer: #57 (pt = 2)
+  Queue: #39, #61, #21, #65, #68, #43, #72, #46, #76, #79
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75
+
+
+=== [ Turn: 46 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 2)
+  Queue: (empty)
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #83 (pt = 1)
+  Queue: #9, #81
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #16 (pt = 1)
+  Queue: #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #30 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #39, #61, #21, #65, #68, #43, #72, #46, #76, #79
+  SBuffer: #57
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75
+
+
+=== [ Turn: 47 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: (empty)
+  SBuffer: #70
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81
+  SBuffer: #83
+
+WORKER #3
+  PBuffer: #16 (pt = 2)
+  Queue: #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #85
+  SBuffer: #30
+
+WORKER #5
+  PBuffer: #39 (pt = 1)
+  Queue: #61, #21, #65, #68, #43, #72, #46, #76, #79, #57
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75
+
+
+=== [ Turn: 48 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #86 (pt = 1)
+  Queue: #70
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #87 (pt = 1)
+  Queue: #9, #81
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #36, #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88
+  SBuffer: #16
+
+WORKER #4
+  PBuffer: #85 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #39 (pt = 2)
+  Queue: #61, #21, #65, #68, #43, #72, #46, #76, #79, #57
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30
+
+
+=== [ Turn: 49 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #86 (pt = 2)
+  Queue: #70
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #16
+  SBuffer: #87
+
+WORKER #3
+  PBuffer: #36 (pt = 1)
+  Queue: #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: #85
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #61, #21, #65, #68, #43, #72, #46, #76, #79, #57
+  SBuffer: #39
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30
+
+
+=== [ Turn: 50 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #70
+  SBuffer: #86
+
+WORKER #2
+  PBuffer: #16 (pt = 1)
+  Queue: #9, #81
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #36 (pt = 2)
+  Queue: #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #39 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #91
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #61 (pt = 1)
+  Queue: #21, #65, #68, #43, #72, #46, #76, #79, #57, #90
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87
+
+
+=== [ Turn: 51 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 1)
+  Queue: #92, #86
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81
+  SBuffer: #16
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #38, #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89
+  SBuffer: #36
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #91, #93
+  SBuffer: #39
+
+WORKER #5
+  PBuffer: #61 (pt = 2)
+  Queue: #21, #65, #68, #43, #72, #46, #76, #79, #57, #90
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87
+
+
+=== [ Turn: 52 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #70 (pt = 2)
+  Queue: #92, #86
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #36 (pt = 1)
+  Queue: #9, #81, #94
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #38 (pt = 1)
+  Queue: #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #93 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #91
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #21, #65, #68, #43, #72, #46, #76, #79, #57, #90
+  SBuffer: #61
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39
+
+
+=== [ Turn: 53 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #92, #86
+  SBuffer: #70
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94
+  SBuffer: #36
+
+WORKER #3
+  PBuffer: #38 (pt = 2)
+  Queue: #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #91
+  SBuffer: #93
+
+WORKER #5
+  PBuffer: #21 (pt = 1)
+  Queue: #65, #68, #43, #72, #46, #76, #79, #57, #90, #61
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39
+
+
+=== [ Turn: 54 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #92 (pt = 1)
+  Queue: #86, #97
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #70 (pt = 1)
+  Queue: #9, #81, #94, #98
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #40, #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99
+  SBuffer: #38
+
+WORKER #4
+  PBuffer: #91 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #21 (pt = 2)
+  Queue: #65, #68, #43, #72, #46, #76, #79, #57, #90, #61
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36
+
+
+=== [ Turn: 55 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #92 (pt = 2)
+  Queue: #86, #97
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #38
+  SBuffer: #70
+
+WORKER #3
+  PBuffer: #40 (pt = 1)
+  Queue: #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: #91
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #65, #68, #43, #72, #46, #76, #79, #57, #90, #61
+  SBuffer: #21
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36
+
+
+=== [ Turn: 56 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #86, #97
+  SBuffer: #92
+
+WORKER #2
+  PBuffer: #38 (pt = 1)
+  Queue: #9, #81, #94, #98
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #40 (pt = 2)
+  Queue: #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #102 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #65 (pt = 1)
+  Queue: #68, #43, #72, #46, #76, #79, #57, #90, #61, #101, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70
+
+
+=== [ Turn: 57 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #86 (pt = 1)
+  Queue: #97, #103
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #92
+  SBuffer: #38
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #18, #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100
+  SBuffer: #40
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104
+  SBuffer: #102
+
+WORKER #5
+  PBuffer: #65 (pt = 2)
+  Queue: #68, #43, #72, #46, #76, #79, #57, #90, #61, #101, #21
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70
+
+
+=== [ Turn: 58 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #86 (pt = 2)
+  Queue: #97, #103
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #92 (pt = 1)
+  Queue: #9, #81, #94, #98
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #18 (pt = 1)
+  Queue: #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #40 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #68, #43, #72, #46, #76, #79, #57, #90, #61, #101, #21, #105
+  SBuffer: #65
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102
+
+
+=== [ Turn: 59 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #97, #103
+  SBuffer: #86
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98
+  SBuffer: #92
+
+WORKER #3
+  PBuffer: #18 (pt = 2)
+  Queue: #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #65
+  SBuffer: #40
+
+WORKER #5
+  PBuffer: #68 (pt = 1)
+  Queue: #43, #72, #46, #76, #79, #57, #90, #61, #101, #21, #105
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102
+
+
+=== [ Turn: 60 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #97 (pt = 1)
+  Queue: #103, #108
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #86 (pt = 1)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #45, #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110
+  SBuffer: #18
+
+WORKER #4
+  PBuffer: #65 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #68 (pt = 2)
+  Queue: #43, #72, #46, #76, #79, #57, #90, #61, #101, #21, #105
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40
+
+
+=== [ Turn: 61 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #97 (pt = 2)
+  Queue: #103, #108
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #109, #18
+  SBuffer: #86
+
+WORKER #3
+  PBuffer: #45 (pt = 1)
+  Queue: #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111
+  SBuffer: #65
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #43, #72, #46, #76, #79, #57, #90, #61, #101, #21, #105
+  SBuffer: #68
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40
+
+
+=== [ Turn: 62 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #103, #108
+  SBuffer: #97
+
+WORKER #2
+  PBuffer: #18 (pt = 1)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #45 (pt = 2)
+  Queue: #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #68 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #43 (pt = 1)
+  Queue: #72, #46, #76, #79, #57, #90, #61, #101, #21, #105, #112
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65
+
+
+=== [ Turn: 63 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #103 (pt = 1)
+  Queue: #108, #114, #97
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: #18
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #47, #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113
+  SBuffer: #45
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111, #115
+  SBuffer: #68
+
+WORKER #5
+  PBuffer: #43 (pt = 2)
+  Queue: #72, #46, #76, #79, #57, #90, #61, #101, #21, #105, #112
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65
+
+
+=== [ Turn: 64 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #103 (pt = 2)
+  Queue: #108, #114, #97
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #45 (pt = 1)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: #47 (pt = 1)
+  Queue: #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: #117 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111, #115
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #72, #46, #76, #79, #57, #90, #61, #101, #21, #105, #112, #116
+  SBuffer: #43
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86, #18
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65, #68
+
+
+=== [ Turn: 65 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: (empty)
+  Queue: #108, #114, #97
+  SBuffer: #103
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: #45
+
+WORKER #3
+  PBuffer: #47 (pt = 2)
+  Queue: #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113, #118
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111, #115, #43
+  SBuffer: #117
+
+WORKER #5
+  PBuffer: #72 (pt = 1)
+  Queue: #46, #76, #79, #57, #90, #61, #101, #21, #105, #112, #116
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86, #18
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65, #68
+
+
+=== [ Turn: 66 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #108 (pt = 1)
+  Queue: #114, #97, #119, #103
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: #120 (pt = 1)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: (empty)
+
+WORKER #3
+  PBuffer: (empty)
+  Queue: #49, #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113, #118
+  SBuffer: #47
+
+WORKER #4
+  PBuffer: #121 (pt = 1)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111, #115, #43
+  SBuffer: (empty)
+
+WORKER #5
+  PBuffer: #72 (pt = 2)
+  Queue: #46, #76, #79, #57, #90, #61, #101, #21, #105, #112, #116
+  SBuffer: (empty)
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86, #18, #45, #117
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65, #68
+
+
+=== [ Turn: 67 ] ===
+
+== WORKERS ==
+WORKER #1
+  PBuffer: #108 (pt = 2)
+  Queue: #114, #97, #119, #103
+  SBuffer: (empty)
+
+WORKER #2
+  PBuffer: (empty)
+  Queue: #9, #81, #94, #98, #109
+  SBuffer: #120
+
+WORKER #3
+  PBuffer: #49 (pt = 1)
+  Queue: #19, #62, #63, #66, #67, #69, #71, #77, #78, #29, #80, #84, #88, #89, #95, #96, #99, #100, #107, #110, #113, #118, #122
+  SBuffer: (empty)
+
+WORKER #4
+  PBuffer: (empty)
+  Queue: #25, #17, #41, #52, #32, #73, #82, #104, #106, #111, #115, #43, #47
+  SBuffer: #121
+
+WORKER #5
+  PBuffer: (empty)
+  Queue: #46, #76, #79, #57, #90, #61, #101, #21, #105, #112, #116
+  SBuffer: #72
+
+== STOREHOUSES ==
+
+STOREHOUSE #1
+  Stock: #3, #4, #2, #1, #15, #5, #6, #26, #14, #10, #34, #31, #11, #50, #51, #54, #55, #22, #58, #53, #27, #74, #48, #28, #83, #85, #16, #93, #91, #38, #86, #18, #45, #117
+
+STOREHOUSE #2
+  Stock: #7, #8, #20, #24, #33, #35, #13, #37, #44, #42, #23, #60, #59, #56, #64, #12, #75, #30, #87, #39, #36, #70, #102, #92, #40, #65, #68
 
 
