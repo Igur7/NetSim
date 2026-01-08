@@ -89,9 +89,8 @@ ReceiverType Worker::get_receiver_type() const {
 }   
 
 void Ramp::deliver_goods(Time t) {
-    // Produce a new package on turns that are multiples of the delivery interval.
     // Simulation uses 1-based turns, so produce when t % di_ == 0.
-    if (di_ == 0) return; // guard against division by zero
+    if (di_ == 0) return; 
 
     if (t % di_ == 0) {
         // create a fresh package with generated id
