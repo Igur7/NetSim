@@ -73,7 +73,7 @@ void Worker::do_work(Time t){// w symulacji update czasu t
     }
 
     if (_buffer_.has_value()) {
-        if (t - time_ >= process_durration_) {
+        if (t - time_ == process_durration_) {
             push_package(std::move(_buffer_.value()));
             _buffer_.reset();
         }
@@ -89,16 +89,12 @@ ReceiverType Worker::get_receiver_type() const {
 }   
 
 void Ramp::deliver_goods(Time t) {
-    if (!buffer_) {
-        buffer_.emplace(id_);   // tworzymy paczkę w buforze rampy, bo tam jest std::optional to jak sie tam da id_ to on odpadli konstruktori paczki i doda paczka do buffer
-        time_ = t;              // zapamiętujemy moment rozpoczęcia
-        return;
-    }
+    // Simulation uses 1-based turns, so produce when t % di_ == 0.
+    if (di_ == 0) return; 
 
-    // 2. Jeśli paczka była produkowana i minął czas dostawy
-    if (t - time_ == di_) {
-        push_package(std::move(*buffer_)); // przekazujemy do wysyłki
-        buffer_.reset();                   // bufor znów pusty
+    if (t % di_ == 0) {
+        // create a fresh package with generated id
+        push_package(Package());
     }
 }
 

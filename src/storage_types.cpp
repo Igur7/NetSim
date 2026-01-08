@@ -5,18 +5,22 @@ PackageQueue::PackageQueue(PackageQueueType queue_type) : queue_type_(queue_type
 
 Package PackageQueue::pop(){
     if (_list.empty()) {
-        throw std::out_of_range("Attempted to pop from an empty PackageQueue");
+        throw std::out_of_range("Attempted to pop from empty queue");
     }
-    Package pkg;
-    if (queue_type_ == PackageQueueType::Fifo) {
-        pkg = std::move(_list.front());
+
+    Package pkg = 
+        (queue_type_ == PackageQueueType::Fifo)
+        ? std::move(_list.front())
+        : std::move(_list.back());
+
+    if (queue_type_ == PackageQueueType::Fifo)
         _list.pop_front();
-    } else {
-        pkg = std::move(_list.back());
+    else
         _list.pop_back();
-    }
+
     return pkg;
 }
+
 
 PackageQueueType PackageQueue::getQueueType() const {
     return queue_type_;

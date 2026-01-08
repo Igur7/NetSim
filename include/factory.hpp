@@ -1,3 +1,6 @@
+#ifndef FACTORY_HPP
+#define FACTORY_HPP
+
 #include <list>
 #include <algorithm>
 #include <stdexcept>
@@ -109,3 +112,5 @@ class IO{
     ParsedLineData parse_line(const std::string& line);
     
 };
+
+#endif // FACTORY_HPP

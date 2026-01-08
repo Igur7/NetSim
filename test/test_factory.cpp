@@ -1,7 +1,13 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
+#include <sstream>
+#include <set>
+#include <iterator>
+#include <gmock/gmock.h>
+
 #include "factory.hpp"
 #include "nodes.hpp"
 #include "types.hpp"
+
 
 template<typename T>
 std::shared_ptr<T> make_observer_ptr(T* ptr) {
@@ -357,4 +363,21 @@ TEST(SaveFactoryTest, SaveFactoryStructureToTxt) {
     EXPECT_NE(saved.find("LINK src=worker-1 dest=worker-2"), std::string::npos);
 
     EXPECT_NE(saved.find("LINK src=worker-2 dest=store-1"), std::string::npos);
+}
+
+TEST(PackageSenderTest, SendingBufferEmptyAfterSending) {
+    Worker worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::Fifo));
+    Ramp ramp(1, 1);
+
+    auto worker_ptr = make_observer_ptr<IPackageReceiver>(&worker);
+    ramp.add_receiver(worker_ptr);
+
+    // Dodaj paczkę do bufora rampy
+    ramp.push_package(Package());
+
+    // Wykonaj przekazanie paczki
+    ramp.send_package();
+
+    // Sprawdź, czy bufor jest pusty
+    EXPECT_TRUE(ramp.get_sending_buffer().has_value() == false);
 }

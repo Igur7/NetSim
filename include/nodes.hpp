@@ -26,7 +26,7 @@ class Storehouse: public IPackageReceiver {
         Package releasePackage();
         ElementId get_id() const override { return id_; }
         ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; }
-
+        const IPackageQueue* get_queue() const { return queue_.get(); }
     private:
     std::unique_ptr<IPackageQueue> queue_;
     ElementId id_;
@@ -41,6 +41,8 @@ class ReceiverPreferences {
         void remove_receiver(std::shared_ptr<IPackageReceiver> r);
         std::shared_ptr<IPackageReceiver> choose_receiver();
         const preferences_t& get_preferences() const {return preferences_; }
+        auto cbegin() const { return preferences_.cbegin(); }
+        auto cend() const { return preferences_.cend(); }
 
     private:
         preferences_t preferences_;
@@ -49,6 +51,7 @@ class ReceiverPreferences {
 
 class PackageSender {
     //friend class Factory;
+
     public:
         PackageSender() = default;
     
@@ -72,7 +75,9 @@ class PackageSender {
         const auto& get_receiver_preferences() const {
             return receiver_preferences_.get_preferences();
         }
-
+        const ReceiverPreferences &getReceiverPreferences() const {
+            return receiver_preferences_;
+        }
     protected:
         ReceiverPreferences receiver_preferences_;
         std::optional<Package> sending_buffer_ = std::nullopt;
