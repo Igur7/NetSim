@@ -4,6 +4,8 @@
 LOADING_RAMP id=1 delivery-interval=3
 LOADING_RAMP id=2 delivery-interval=2
 LOADING_RAMP id=3 delivery-interval=1
+LOADING_RAMP id=4 delivery-interval=4
+
 ; == WORKERS ==
 
 WORKER id=1 processing-time=2 queue-type=FIFO
@@ -11,17 +13,22 @@ WORKER id=2 processing-time=1 queue-type=LIFO
 WORKER id=3 processing-time=2 queue-type=FIFO
 WORKER id=4 processing-time=1 queue-type=LIFO
 WORKER id=5 processing-time=1 queue-type=FIFO
+WORKER id=6 processing-time=1 queue-type=LIFO
 
 
 ; == STOREHOUSES ==
 
 STOREHOUSE id=1
 STOREHOUSE id=2
+STOREHOUSE id=3
 
 
 ; == LINKS ==
 
 ; ==RAMP-LINKS==
+
+LINK src=ramp-4 dest=worker-6
+
 LINK src=ramp-1 dest=worker-1
 
 LINK src=ramp-1 dest=worker-2
@@ -33,6 +40,8 @@ LINK src=ramp-2 dest=worker-5
 LINK src=ramp-3 dest=worker-3
 
 LINK src=ramp-3 dest=worker-4
+
+LINK src=worker-6 dest=worker-4
 
 LINK src=worker-1 dest=worker-1
 
@@ -56,4 +65,6 @@ LINK src=worker-4 dest=store-1
 
 LINK src=worker-4 dest=store-2
 
+LINK src=worker-6 dest=worker-3
 
+LINK src=worker-3 dest=store-3
