@@ -51,11 +51,6 @@ configure_file(
 
 find_program(DOT_EXECUTABLE dot)
 
-if (DOT_EXECUTABLE)
-    message(STATUS "Graphviz found: ${DOT_EXECUTABLE}")
-else()
-    message(WARNING "Graphviz NOT found – PNG will not be generated")
-endif()
 
 enable_testing()
 add_test(NAME AllTests COMMAND Netsim_test)
