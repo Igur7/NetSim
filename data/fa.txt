@@ -47,7 +47,7 @@ LINK src=worker-1 dest=worker-1
 
 LINK src=worker-1 dest=worker-2
 
-LINK src=worker-3 dest=worker-3
+LINK src=worker-6 dest=worker-6
 
 LINK src=worker-3 dest=worker-2
 
