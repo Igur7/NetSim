@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <vector> 
+#include "types.hpp"
 #include "nodes.hpp"
 
 enum class NodeColor { UNVISITED, VISITED, VERIFIED };

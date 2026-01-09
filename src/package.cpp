@@ -1,23 +1,23 @@
 #include "package.hpp"
 
-std::set<ElementId> Package::freed_ids_;
-std::set<ElementId> Package::assigned_ids_;
+std::set<ElementID> Package::freed_ids_;
+std::set<ElementID> Package::assigned_ids_;
 
-ElementId Package::generate_id() {
+ElementID Package::generate_id() {
     if(!freed_ids_.empty()) {
-        ElementId id = *freed_ids_.begin();
+        ElementID id = *freed_ids_.begin();
         freed_ids_.erase(freed_ids_.begin());
         assigned_ids_.insert(id);
         return id;
     }
-    ElementId new_id = assigned_ids_.empty() ? 1 : (*assigned_ids_.rbegin()) + 1;
+    ElementID new_id = assigned_ids_.empty() ? 1 : (*assigned_ids_.rbegin()) + 1;
     assigned_ids_.insert(new_id);
     return new_id;
 }
 
 Package::Package() : id_(generate_id()) {}
 
-Package::Package(ElementId id) : id_(id) {
+Package::Package(ElementID id) : id_(id) {
     assigned_ids_.insert(id_);
 }
 

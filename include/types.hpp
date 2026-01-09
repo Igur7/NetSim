@@ -1,6 +1,6 @@
 #pragma once 
 
-using ElementId = int;
+using ElementID = int;
 using TimeOffset = unsigned;
 using Time = unsigned;
 

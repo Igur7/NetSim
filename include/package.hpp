@@ -6,21 +6,21 @@
 class Package {
 public:
     Package();                       // nowe ID
-    Package(ElementId id);           // używa stare ID
+    Package(ElementID id);           // używa stare ID
     Package(Package&& other) noexcept;
 
     Package& operator=(Package&& other) noexcept;
 
-    ElementId getID() const { return id_; }
+    ElementID get_id() const { return id_; }
 
     ~Package();
 
 private:
-    ElementId id_;
+    ElementID id_;
 
     // pola dzielone przez wszystkie obikety danej klasy
-    static std::set<ElementId> freed_ids_;  
-    static std::set<ElementId> assigned_ids_;
+    static std::set<ElementID> freed_ids_;  
+    static std::set<ElementID> assigned_ids_;
 
-    static ElementId generate_id();
+    static ElementID generate_id();
 };
