@@ -18,3 +18,5 @@ Templatka do pull requesta:
 - czy się kompiluje
 - czy działa jak natura chciała
 
+Aby generować obrazki graphów należy zaintalować graphviz:
+https://graphviz.org/download/
